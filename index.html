@@ -1,0 +1,223 @@
+<!doctype html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Ceevora POS | Point of Sale for Saudi Arabia</title>
+<meta name="description" content="Point of sale for Saudi cafés, bakeries, restaurants and retailers. Checkout, inventory, reporting and accounting across your shops, in Arabic and English.">
+<meta property="og:title" content="Ceevora POS | Point of Sale for Saudi Arabia">
+<meta property="og:description" content="Run the counter. See the whole business.">
+<meta property="og:image" content="assets/cevora-dashboard.webp">
+<link rel="icon" href="assets/mark.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<script src="strings.js"></script>
+</head>
+<body>
+<a class="skip" href="#main" data-t="skip">Skip to content</a>
+
+<header class="nav lg lg-bar" id="top">
+  <a href="#top" class="brand" aria-label="Ceevora POS home"><img src="assets/mark.png" alt="Ceevora" width="130" height="43"></a>
+  <nav class="nav-links" aria-label="Main">
+    <a href="#workspace" data-t="product">Product</a>
+    <a href="#types" data-t="nav_types">Who it's for</a>
+    <a href="#modules" data-t="modules">Modules</a>
+    <a href="#faq" data-t="faq">FAQ</a>
+  </nav>
+  <div class="nav-end">
+    <button class="lang lg-chip" id="langBtn" type="button" data-t="lang_switch" lang="ar">العربية</button>
+    <a class="btn btn-solid" href="#contact" data-t="nav_contact">Book a demo</a>
+  </div>
+</header>
+
+<main id="main">
+<section class="hero">
+  <div class="blobs" aria-hidden="true"><i></i><i></i><i></i></div>
+  <div class="wrap hero-grid">
+    <h1><span data-t="heroLine1">Run the counter.</span><br><span class="accent" data-t="heroLine2">See the whole business.</span></h1>
+    <div class="hero-side">
+      <p class="badge" data-t="heroBadge">Point of sale for Saudi Arabia</p>
+      <p class="lead" data-t="heroBody"></p>
+      <div class="ctas">
+        <a class="btn btn-solid" href="#contact" data-t="nav_contact">Book a demo</a>
+        <a class="btn lg lg-btn" href="#video"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path d="M8 5v14l11-7z" fill="currentColor"/></svg><span data-t="watch">Watch the tour</span></a>
+      </div>
+    </div>
+  </div>
+  <div class="wrap">
+    <figure class="hero-shot lg lg-pane">
+      <img src="assets/cevora-dashboard.webp" alt="Ceevora management console showing today's sales" width="1896" height="830" fetchpriority="high">
+    </figure>
+    <ul class="trust">
+      <li class="lg lg-chip-pill" data-t="trust_1"></li>
+      <li class="lg lg-chip-pill" data-t="trust_2"></li>
+      <li class="lg lg-chip-pill" data-t="trust_3"></li>
+      <li class="lg lg-chip-pill" data-t="trust_4"></li>
+      <li class="lg lg-chip-pill" data-t="trust_5"></li>
+    </ul>
+  </div>
+</section>
+
+<section class="sec light" id="workspace">
+  <div class="wrap">
+    <h2 data-t="galleryTitle"></h2>
+    <p class="intro" data-t="galleryIntro"></p>
+    <div class="tabs" role="tablist" id="galTabs"></div>
+    <figure class="gallery">
+      <button class="zoom" id="galImgBtn" type="button"><img id="galImg" src="assets/cevora-terminal.webp" alt="POS checkout" width="1672" height="817"></button>
+      <figcaption id="galCap"></figcaption>
+      <div class="gal-nav">
+        <button class="round" id="galPrev" type="button" data-t-label="previous" aria-label="Previous">&#8249;</button>
+        <button class="round" id="galNext" type="button" data-t-label="next" aria-label="Next">&#8250;</button>
+      </div>
+    </figure>
+  </div>
+</section>
+
+<section class="sec" id="types">
+  <div class="wrap">
+    <h2 data-t="types_title"></h2>
+    <p class="intro" data-t="types_intro"></p>
+    <div class="seg lg lg-bar" role="tablist" id="typeTabs">
+      <button role="tab" data-type="cafe" data-t="type_cafe" aria-selected="true"></button>
+      <button role="tab" data-type="bakery" data-t="type_bakery" aria-selected="false"></button>
+      <button role="tab" data-type="restaurant" data-t="type_restaurant" aria-selected="false"></button>
+      <button role="tab" data-type="retail" data-t="type_retail" aria-selected="false"></button>
+    </div>
+    <div class="type-panel" role="tabpanel">
+      <ul class="checks" id="typeList"></ul>
+      <img id="typeImg" src="assets/cevora-terminal.webp" alt="" width="1672" height="817" loading="lazy">
+    </div>
+  </div>
+</section>
+
+<section class="sec light" id="modules">
+  <div class="wrap">
+    <h2 data-t="featuresTitle"></h2>
+    <p class="intro" data-t="featuresIntro"></p>
+    <div class="grid" id="modGrid"></div>
+  </div>
+</section>
+
+<section class="sec dark" id="video">
+  <div class="blobs" aria-hidden="true"><i></i><i></i></div>
+  <div class="wrap video-grid">
+    <div>
+      <h2 data-t="video_title"></h2>
+      <p class="intro" data-t="video_intro"></p>
+      <p class="soon" id="videoSoon" data-t="video_soon"></p>
+    </div>
+    <button class="video-card lg lg-pane" id="videoBtn" type="button" aria-label="Play video">
+      <img src="assets/cevora-terminal.webp" alt="" loading="lazy" width="1672" height="817">
+      <span class="play lg lg-btn" aria-hidden="true"><svg viewBox="0 0 24 24" width="28" height="28"><path d="M8 5v14l11-7z" fill="currentColor"/></svg></span>
+    </button>
+  </div>
+</section>
+
+<section class="sec">
+  <div class="wrap two">
+    <div>
+      <h2 data-t="offlineTitle"></h2>
+      <p class="intro" data-t="offlineBody"></p>
+      <ol class="flow">
+        <li data-t="offlineRecord"></li>
+        <li data-t="offlineRestore"></li>
+        <li data-t="offlineSync"></li>
+      </ol>
+      <p class="fine" data-t="offlinePayments"></p>
+    </div>
+    <div>
+      <h2 data-t="hw_title"></h2>
+      <p class="intro" data-t="hw_intro"></p>
+      <ul class="pills">
+        <li data-t="hw_1"></li><li data-t="hw_2"></li><li data-t="hw_3"></li><li data-t="hw_4"></li>
+        <li data-t="hw_5"></li><li data-t="hw_6"></li><li data-t="hw_7"></li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section class="sec zatca-sec">
+  <div class="blobs" aria-hidden="true"><i></i><i></i></div>
+  <div class="wrap">
+    <div class="zatca lg lg-pane">
+      <div>
+        <h2 data-t="zatca_title"></h2>
+        <p data-t="zatca_body"></p>
+      </div>
+      <a class="btn btn-solid" href="#contact" data-t="zatca_cta" data-note="ZATCA e-invoicing"></a>
+    </div>
+  </div>
+</section>
+
+<section class="sec light">
+  <div class="wrap">
+    <h2 data-t="steps_title"></h2>
+    <ol class="steps">
+      <li><b data-t="step_1"></b><span data-t="step_1_body"></span></li>
+      <li><b data-t="step_2"></b><span data-t="step_2_body"></span></li>
+      <li><b data-t="step_3"></b><span data-t="step_3_body"></span></li>
+      <li><b data-t="step_4"></b><span data-t="step_4_body"></span></li>
+    </ol>
+  </div>
+</section>
+
+<section class="sec" id="faq">
+  <div class="wrap narrow">
+    <h2 data-t="faqTitle"></h2>
+    <div id="faqList"></div>
+  </div>
+</section>
+
+<section class="sec dark" id="contact">
+  <div class="blobs" aria-hidden="true"><i></i><i></i><i></i></div>
+  <div class="wrap two">
+    <div>
+      <p class="badge" data-t="ready"></p>
+      <h2 data-t="ctaTitle"></h2>
+      <p class="intro" data-t="ctaBody"></p>
+      <p class="intro" data-t="support"></p>
+      <p class="intro"><a href="mailto:info@ceevora.com">info@ceevora.com</a></p>
+    </div>
+    <form class="form lg lg-pane" id="demoForm" novalidate>
+      <h3 data-t="contactTitle"></h3>
+      <label><span data-t="field_company"></span><input name="company" required autocomplete="organization"></label>
+      <label><span data-t="field_name"></span><input name="name" required autocomplete="name"></label>
+      <label><span data-t="field_email"></span><input name="email" type="email" required autocomplete="email"></label>
+      <label><span data-t="field_phone"></span>
+        <span class="phone"><input name="dial" value="+966" aria-label="Country calling code" autocomplete="tel-country-code"><input name="phone" type="tel" required autocomplete="tel-national" placeholder="50 123 4567"></span>
+      </label>
+      <div class="row2">
+        <label><span data-t="field_country"></span><input name="country" required autocomplete="country-name" data-t-value="country_default"></label>
+        <label><span data-t="field_city"></span><input name="city" required autocomplete="address-level2"></label>
+      </div>
+      <div class="row2">
+        <label><span data-t="field_locations"></span><input name="locations" type="number" min="1" inputmode="numeric" required></label>
+        <label><span data-t="field_terminals"></span><input name="terminals" type="number" min="1" inputmode="numeric" required></label>
+      </div>
+      <label><span><span data-t="notes"></span> <small data-t="optional"></small></span><textarea name="notes" rows="3" data-t-ph="notesPlaceholder"></textarea></label>
+      <p class="err" id="formErr" role="alert"></p>
+      <button class="btn btn-solid" type="submit" data-t="emailButton"></button>
+      <p class="fine" data-t="send_note"></p>
+    </form>
+  </div>
+</section>
+</main>
+
+<footer class="foot">
+  <div class="wrap foot-grid">
+    <div><img src="assets/mark.png" alt="Ceevora" width="120" height="40"><p data-t="footerTagline"></p></div>
+    <div><h4 data-t="product"></h4><a href="#workspace" data-t="workspace"></a><a href="#modules" data-t="modules"></a></div>
+    <div><h4 data-t="help"></h4><a href="#faq" data-t="faq"></a></div>
+    <div><h4 data-t="contactHeading"></h4><a href="#contact" data-t="contact"></a><a href="mailto:info@ceevora.com">info@ceevora.com</a></div>
+  </div>
+  <p class="wrap copy">© 2026 Ceevora POS. <span data-t="rights"></span></p>
+</footer>
+
+<dialog id="viewer" class="viewer"><button class="round close" type="button" aria-label="Close">×</button><div id="viewerBody"></div></dialog>
+
+<script src="app.js"></script>
+</body>
+</html>
