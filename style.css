@@ -12,7 +12,7 @@
   --paper-2: #f2f7f5;
   --line: #d8e4e0;
   --radius: 22px;
-  --font: "Inter", "IBM Plex Sans Arabic", system-ui, sans-serif;
+  --font: "IBM Plex Sans", "IBM Plex Sans Arabic", system-ui, sans-serif;
 
   /* glass tokens */
   --lg-blur: 18px;
@@ -28,7 +28,7 @@
 * { box-sizing: border-box; }
 html { scroll-behavior: smooth; scroll-padding-top: 88px; }
 body { margin: 0; font-family: var(--font); color: var(--ink); background: var(--paper); line-height: 1.55; -webkit-font-smoothing: antialiased; }
-[dir="rtl"] body { font-family: "IBM Plex Sans Arabic", "Inter", system-ui, sans-serif; }
+[dir="rtl"] body { font-family: "IBM Plex Sans Arabic", "IBM Plex Sans", system-ui, sans-serif; }
 img { max-width: 100%; height: auto; display: block; }
 a { color: inherit; }
 h1, h2, h3 { line-height: 1.12; letter-spacing: -0.02em; margin: 0 0 12px; }
@@ -97,7 +97,7 @@ h3 { font-size: 1.08rem; }
 /* ---------- buttons ---------- */
 .btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; font: inherit; font-weight: 600; text-decoration: none; cursor: pointer; border: 0; border-radius: 999px; padding: 12px 20px; min-height: 44px; transition: transform .15s ease, filter .15s ease; }
 .btn:active { transform: scale(.97); }
-.btn-solid { background: var(--brand); color: var(--brand-ink); box-shadow: 0 8px 20px -8px rgba(13,107,87,.7); }
+.btn-solid { background: var(--brand); color: var(--brand-ink); box-shadow: 0 6px 16px -8px rgba(0,0,0,.45); }
 .btn-solid:hover { filter: brightness(1.1); }
 .lg-btn { color: #fff; }
 .lg-btn:hover { --lg-tint: rgba(255,255,255,.18); }
@@ -114,7 +114,7 @@ h3 { font-size: 1.08rem; }
 
 .hero { padding: 140px 0 70px; }
 .hero-grid { display: grid; grid-template-columns: 1.25fr 1fr; gap: 40px; align-items: end; margin-bottom: 44px; }
-.hero h1 { font-size: clamp(2.5rem, 6vw, 4.6rem); font-weight: 800; margin: 0; color: #fff; }
+.hero h1 { font-size: clamp(2.5rem, 6vw, 4.6rem); font-weight: 700; margin: 0; color: #fff; }
 .accent { color: var(--mint); }
 .badge { display: inline-block; font-weight: 600; font-size: .9rem; color: var(--mint); margin: 0 0 10px; }
 .lead { color: #c9e3dc; font-size: 1.08rem; margin: 0 0 22px; }
