@@ -20,6 +20,7 @@
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css">
 <script type="application/ld+json">[{"@context": "https://schema.org", "@type": "SoftwareApplication", "name": "Ceevora POS", "applicationCategory": "BusinessApplication", "operatingSystem": "Windows, Android", "description": "Connect checkout, inventory, reporting and accounting across your shops. Built for cafés, donut shops, bakeries, restaurants and specialty retailers.", "url": "https://notyousha.github.io/ceevora-pos-site/", "image": "https://notyousha.github.io/ceevora-pos-site/assets/og.jpg", "inLanguage": ["en", "ar"], "publisher": {"@type": "Organization", "name": "Ceevora", "email": "info@ceevora.com", "logo": "https://notyousha.github.io/ceevora-pos-site/assets/mark.png"}}, {"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "What hardware can we use?", "acceptedAnswer": {"@type": "Answer", "text": "Discuss Windows or Android POS devices with Ceevora. Share your payment terminal, printer, cash drawer or scanner models to confirm compatibility."}}, {"@type": "Question", "name": "Does checkout work offline?", "acceptedAnswer": {"@type": "Answer", "text": "A configured till can record core counter sales locally and sync them when the connection returns. Online refunds, reports, and provider integrations require connectivity."}}, {"@type": "Question", "name": "Does Ceevora POS support Arabic?", "acceptedAnswer": {"@type": "Answer", "text": "Yes. Ceevora POS supports Arabic and English interfaces, including a right-to-left interface and bilingual catalog names."}}, {"@type": "Question", "name": "Can each branch have its own menu?", "acceptedAnswer": {"@type": "Answer", "text": "Yes. Configure menus by shop, track stock by location and compare sales across locations in the management console."}}, {"@type": "Question", "name": "Can I manage more than one shop?", "acceptedAnswer": {"@type": "Answer", "text": "Yes. Organize tills under stores and branches, scope staff access by location, and use branch and store filters in sales reporting."}}, {"@type": "Question", "name": "Can I handle orders for business customers?", "acceptedAnswer": {"@type": "Answer", "text": "The back-office workflow supports customer prices, credit terms, standing orders, and production lists by kitchen."}}, {"@type": "Question", "name": "Can I receive delivery app orders?", "acceptedAnswer": {"@type": "Answer", "text": "The delivery inbox supports enabled providers. Provider activation, store configuration, and POS product mapping are required."}}, {"@type": "Question", "name": "Can I give staff different permissions?", "acceptedAnswer": {"@type": "Answer", "text": "Yes. Staff and administrators can be given role-based permissions and access to assigned locations."}}, {"@type": "Question", "name": "How are refunds and voids approved?", "acceptedAnswer": {"@type": "Answer", "text": "Cashiers can look up a sale and request manager approval. These reversals require an online connection."}}, {"@type": "Question", "name": "How do we plan for Saudi e-invoicing?", "acceptedAnswer": {"@type": "Answer", "text": "Share your ZATCA requirements with Ceevora to confirm the supported configuration and onboarding scope for your business."}}, {"@type": "Question", "name": "Can sales use up recipe ingredients?", "acceptedAnswer": {"@type": "Answer", "text": "Yes. When Inventory is enabled and a product has a recipe, checkout can deduct its ingredient quantities using the configured units."}}, {"@type": "Question", "name": "Can I track expiry dates and stock counts?", "acceptedAnswer": {"@type": "Answer", "text": "Yes. Inventory includes batch and expiry tracking, physical counts, and variance review."}}, {"@type": "Question", "name": "Which reports can I export?", "acceptedAnswer": {"@type": "Answer", "text": "Standard sales reports include daily sales, categories, promotions, and VAT, with CSV or Excel export. Sales Summary has a PDF download."}}]}]</script>
+<script defer src="config.js"></script>
 <script defer src="strings.js"></script>
 <script defer src="app.js"></script>
 </head>
@@ -32,10 +33,11 @@
     <a href="#workspace" data-t="product">Product</a>
     <a href="#types" data-t="nav_types">Who it's for</a>
     <a href="#modules" data-t="modules">Modules</a>
+    <a href="#quote" data-t="quote_title">Build your setup</a>
     <a href="#faq" data-t="faq">FAQ</a>
   </nav>
   <div class="nav-end">
-    <button class="lang lg-chip" id="langBtn" type="button" lang="ar"><img id="langFlag" src="assets/flags/sa.svg" alt="" width="21" height="14"><span id="langLabel">العربية</span></button>
+    <button class="lang lg-chip" id="langBtn" type="button" lang="ar"><img id="langFlag" src="assets/flags/sa.webp" alt="" width="27" height="18" decoding="async"><span id="langLabel">العربية</span></button>
     <a class="btn btn-solid nav-cta" href="#contact" data-t="nav_contact">Book a demo</a>
     <button class="burger" id="burger" type="button" aria-expanded="false" aria-controls="mnav" data-t-label="openNavigation" aria-label="Open navigation"><span></span><span></span></button>
   </div>
@@ -44,6 +46,7 @@
   <a href="#workspace" data-t="product">Product</a>
   <a href="#types" data-t="nav_types">Who it's for</a>
   <a href="#modules" data-t="modules">Modules</a>
+  <a href="#quote" data-t="quote_title">Build your setup</a>
   <a href="#faq" data-t="faq">FAQ</a>
   <a class="btn btn-solid" href="#contact" data-t="nav_contact">Book a demo</a>
 </nav>
@@ -58,6 +61,7 @@
       <p class="lead" data-t="heroBody">Connect checkout, inventory, reporting and accounting across your shops. Built for cafés, donut shops, bakeries, restaurants and specialty retailers.</p>
       <div class="ctas">
         <a class="btn btn-solid" href="#contact" data-t="nav_contact">Book a demo</a>
+        <a class="btn lg lg-btn" id="tryDemo" hidden target="_blank" rel="noopener" data-t="try_demo">Try the live demo</a>
         <a class="btn lg lg-btn" href="#video"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path d="M8 5v14l11-7z" fill="currentColor"/></svg><span data-t="watch">Watch the tour</span></a>
       </div>
     </div>
@@ -188,6 +192,37 @@
   </div>
 </section>
 
+<section class="sec light" id="quote">
+  <div class="wrap two quote-grid">
+    <div>
+      <h2 data-t="quote_title">Build your setup</h2>
+      <p class="intro" data-t="quote_intro">Tell us your shops and registers, pick the modules you want, and we will turn it into a quote.</p>
+      <form class="qform" id="qform">
+        <label><span data-t="q_type">Business type</span><select name="qtype" id="qtype"></select></label>
+        <div class="row2">
+          <label><span data-t="q_shops">Shops</span><span class="stepper"><button type="button" data-step="-1" data-for="qshops" aria-label="−">−</button><input id="qshops" name="qshops" type="number" min="1" max="200" value="1" inputmode="numeric"><button type="button" data-step="1" data-for="qshops" aria-label="+">+</button></span></label>
+          <label><span data-t="q_terms">POS terminals</span><span class="stepper"><button type="button" data-step="-1" data-for="qterms" aria-label="−">−</button><input id="qterms" name="qterms" type="number" min="1" max="999" value="1" inputmode="numeric"><button type="button" data-step="1" data-for="qterms" aria-label="+">+</button></span></label>
+        </div>
+        <fieldset><legend data-t="q_modules">Modules</legend><div class="mods" id="qmods"></div></fieldset>
+      </form>
+    </div>
+    <aside class="qcard lg lg-pane" data-r aria-live="polite">
+      <h3 data-t="q_summary">Your setup</h3>
+      <ul class="qlines" id="qlines"></ul>
+      <div class="qprice" id="qprice"></div>
+      <p class="fine" data-t="q_vat">Prices in SAR, excluding VAT. Final quote confirmed by the Ceevora team.</p>
+      <a class="btn btn-solid" href="#contact" id="qcta" data-t="q_cta">Get my quote</a>
+    </aside>
+  </div>
+</section>
+
+<section class="sec" id="customers" hidden>
+  <div class="wrap">
+    <h2 data-t="cust_title">Shops running on Ceevora</h2>
+    <div class="cust" id="custList"></div>
+  </div>
+</section>
+
 <section class="sec dark" id="contact">
   <div class="blobs" aria-hidden="true"><i></i><i></i><i></i></div>
   <div class="wrap two">
@@ -241,6 +276,8 @@
 
 <a class="mcta lg" id="mcta" href="#contact"><span data-t="nav_contact">Book a demo</span></a>
 <div class="progress" id="progress" aria-hidden="true"></div>
+<a class="wa" id="wa" hidden target="_blank" rel="noopener" data-t-label="wa_label" aria-label="Chat on WhatsApp"><svg viewBox="0 0 32 32" width="28" height="28" aria-hidden="true"><path fill="#fff" d="M16 3a13 13 0 0 0-11.2 19.6L3 29l6.6-1.7A13 13 0 1 0 16 3zm0 23.7c-2 0-4-.6-5.7-1.6l-.4-.2-3.9 1 1-3.8-.3-.4A10.7 10.7 0 1 1 16 26.7zm5.9-8c-.3-.2-1.9-.9-2.2-1-.3-.1-.5-.2-.7.2l-1 1.2c-.2.2-.4.2-.7.1a8.8 8.8 0 0 1-4.4-3.8c-.3-.6.3-.5 1-1.7.1-.2 0-.4 0-.6l-1-2.4c-.3-.6-.5-.5-.7-.5h-.6c-.2 0-.6.1-.9.4-.3.3-1.2 1.1-1.2 2.8s1.2 3.2 1.4 3.5c.2.2 2.4 3.6 5.8 5 2.1.9 3 1 4 .8.7-.1 1.9-.8 2.2-1.5.3-.7.3-1.4.2-1.5-.1-.2-.3-.3-.6-.4z"/></svg></a>
+<div class="cookie lg lg-pane" id="cookie" hidden role="dialog" aria-live="polite"><p data-t="cookie_text">We use cookies to see which pages and ads help visitors. Is that OK?</p><div><button class="btn btn-solid" type="button" id="ckYes" data-t="cookie_yes">Accept</button><button class="btn btn-ghost" type="button" id="ckNo" data-t="cookie_no">No thanks</button></div></div>
 
 <dialog id="viewer" class="viewer"><button class="round close" type="button" aria-label="Close"><svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button><div id="viewerBody"></div></dialog>
 

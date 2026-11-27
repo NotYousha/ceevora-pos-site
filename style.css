@@ -26,6 +26,7 @@
   --lg-shadow: 0 18px 50px -12px rgba(2, 20, 22, 0.45);
 }
 * { box-sizing: border-box; }
+[hidden] { display: none !important; }
 html { scroll-behavior: smooth; scroll-padding-top: 88px; }
 body { margin: 0; font-family: var(--font); color: var(--ink); background: var(--paper); line-height: 1.55; -webkit-font-smoothing: antialiased; }
 [dir="rtl"] body { font-family: "IBM Plex Sans Arabic", "IBM Plex Sans", system-ui, sans-serif; }
@@ -386,3 +387,90 @@ a, button, summary { -webkit-tap-highlight-color: transparent; }
 @media (max-width: 520px) {
   .seg { -webkit-mask-image: linear-gradient(90deg, transparent, #000 18px, #000 calc(100% - 18px), transparent); mask-image: linear-gradient(90deg, transparent, #000 18px, #000 calc(100% - 18px), transparent); }
 }
+
+/* ---------- quote builder ---------- */
+.quote-grid { align-items: center; }
+.qform { display: grid; gap: 16px; }
+.qform label, .qform legend { display: grid; gap: 6px; font-weight: 600; font-size: .92rem; }
+.qform select, .qform input[type="number"] { font: inherit; font-size: max(16px, 1rem); color: var(--ink); background: #fff; border: 1px solid var(--line); border-radius: 12px; min-height: 46px; padding: 10px 14px; width: 100%; }
+.qform select { appearance: none; -webkit-appearance: none; padding-inline-end: 38px; background: #fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M7 10l5 5 5-5' fill='none' stroke='%233d5a5c' stroke-width='2' stroke-linecap='round'/%3E%3C/svg%3E") no-repeat right 12px center / 18px; }
+[dir="rtl"] .qform select { background-position: left 12px center; }
+.stepper { display: grid; grid-template-columns: 46px 1fr 46px; border: 1px solid var(--line); border-radius: 12px; background: #fff; overflow: hidden; }
+.stepper input[type="number"] { border: 0; border-radius: 0; text-align: center; font-weight: 700; -moz-appearance: textfield; }
+.stepper input::-webkit-inner-spin-button, .stepper input::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
+.stepper button { border: 0; background: var(--paper-2); font-size: 1.3rem; font-weight: 600; color: var(--brand); cursor: pointer; }
+.stepper button:active { background: #e3eeea; }
+fieldset { border: 0; padding: 0; margin: 0; }
+.mods { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 4px; }
+.mod-opt { display: inline-flex !important; grid-auto-flow: column; align-items: center; gap: 8px !important; padding: 10px 14px; border: 1px solid var(--line); border-radius: 999px; background: #fff; cursor: pointer; font-weight: 500 !important; transition: background-color .2s ease, border-color .2s ease; min-height: 44px; }
+.mod-opt input { width: 18px; height: 18px; margin: 0; }
+.mod-opt:has(input:checked) { background: #e5f4ee; border-color: var(--brand); }
+.qcard { padding: 28px; border-radius: 26px; color: #eaf6f2; display: grid; gap: 14px; --lg-tint: rgba(11,38,41,.9); }
+.qcard h3 { margin: 0; font-size: 1.25rem; }
+.qlines { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+.qlines li { padding-bottom: 8px; border-bottom: 1px solid rgba(255,255,255,.12); }
+.qprice { display: grid; grid-template-columns: 1fr auto; gap: 6px 12px; align-items: baseline; padding: 6px 0; }
+.qprice strong { font-size: 1.8rem; font-variant-numeric: tabular-nums; color: var(--mint); }
+.qprice .qcustom { grid-column: 1 / -1; font-size: 1.15rem; }
+.qprice b { font-variant-numeric: tabular-nums; }
+.qcard .fine { color: #c9e3dc; margin: 0; }
+
+/* ---------- customers ---------- */
+.cust { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 24px; }
+.cust-card { margin: 0; padding: 24px 0; border-top: 2px solid var(--ink); display: grid; gap: 12px; align-content: start; }
+.cust-card img { height: 48px; width: auto; object-fit: contain; }
+.cust-card blockquote { margin: 0; font-size: 1.1rem; line-height: 1.5; }
+.cust-card figcaption { color: var(--ink-2); font-size: .92rem; }
+
+/* ---------- WhatsApp ---------- */
+.wa { position: fixed; z-index: 56; inset-inline-end: 18px; bottom: max(18px, env(safe-area-inset-bottom)); width: 56px; height: 56px; border-radius: 50%; display: grid; place-items: center; background: #1fa855; box-shadow: 0 10px 24px -10px rgba(0,0,0,.5); transition: transform .2s ease; }
+.wa:hover { transform: scale(1.06); }
+@media (max-width: 860px) { .wa { bottom: calc(max(14px, env(safe-area-inset-bottom)) + 66px); } }
+
+/* ---------- cookie notice ---------- */
+.cookie { position: fixed; z-index: 70; inset-inline: 16px; bottom: max(16px, env(safe-area-inset-bottom)); margin-inline: auto; max-width: 560px; padding: 18px 20px; border-radius: 20px; color: #eaf6f2; display: grid; gap: 12px; --lg-tint: rgba(11,38,41,.92); }
+.cookie p { margin: 0; }
+.cookie div { display: flex; gap: 8px; flex-wrap: wrap; }
+.btn-ghost { background: transparent; color: inherit; box-shadow: inset 0 0 0 1px rgba(255,255,255,.35); }
+
+/* ---------- 27 Nov fixes ---------- */
+/* flags: keep their real proportions (no cropping) */
+.lang img, .lang.lang-big img { width: auto; height: 18px; object-fit: contain; border-radius: 3px; }
+.lang:not(.lang-big) img { height: 16px; }
+
+/* menu opens and closes with a clip reveal (Safari keeps the blur during clip-path, unlike opacity) */
+.mnav { clip-path: inset(0 0 100% 0 round 26px); transform: translateY(-6px); transition: clip-path .38s cubic-bezier(.22,1,.36,1), transform .38s cubic-bezier(.22,1,.36,1); }
+.mnav.open { clip-path: inset(0 0 0 0 round 26px); transform: none; }
+.mnav:not([hidden]) { animation: none !important; }
+.mnav a { opacity: 0; transform: translateY(-4px); transition: opacity .25s ease, transform .3s cubic-bezier(.22,1,.36,1); }
+.mnav.open a { opacity: 1; transform: none; }
+.mnav.open a:nth-child(2) { transition-delay: .03s; } .mnav.open a:nth-child(3) { transition-delay: .06s; }
+.mnav.open a:nth-child(4) { transition-delay: .09s; } .mnav.open a:nth-child(5) { transition-delay: .12s; } .mnav.open a:nth-child(6) { transition-delay: .15s; }
+
+/* bottom "Book a demo" bar: real glass, and it rises by clipping, not moving, so Safari's blur doesn't pop in late */
+@media (max-width: 860px) {
+  .mcta {
+    --lg-tint: rgba(13,107,87,.5); --lg-blur: 16px; --lg-shadow: 0 12px 28px -14px rgba(2,20,22,.55);
+    transform: none; transition: clip-path .45s cubic-bezier(.22,1,.36,1);
+    clip-path: inset(100% 0 0 0 round 999px); pointer-events: none;
+    text-shadow: 0 1px 2px rgba(0,0,0,.35);
+  }
+  .mcta.show { clip-path: inset(0 0 0 0 round 999px); pointer-events: auto; transform: none; }
+}
+
+/* business types on phones: all four visible as a 2x2 grid, so the outline is never cut off */
+@media (max-width: 520px) {
+  .seg { display: grid; grid-template-columns: 1fr 1fr; overflow: visible; -webkit-mask-image: none; mask-image: none; border-radius: 24px; width: 100%; }
+  .seg button { white-space: normal; line-height: 1.25; padding: 10px 12px; min-height: 48px; }
+  .seg-lens { border-radius: 18px; }
+}
+@media (prefers-reduced-motion: reduce) { .mnav, .mnav a, .mcta { transition: none; } }
+.mnav { background-color: rgba(255,255,255,.96); }
+/* menu: solid enough to read, no backdrop (WebKit drops the panel fill when blur + clip-path animate together) */
+.mnav { -webkit-backdrop-filter: none; backdrop-filter: none; background: rgba(255,255,255,.97); box-shadow: 0 24px 50px -20px rgba(2,20,22,.45); }
+/* bottom bar: glass but keeps white text readable over light sections */
+@media (max-width: 860px) { .mcta { --lg-tint: rgba(13,107,87,.74); } }
+/* WebKit: give the menu its own compositing layer so animated hero layers can't paint over it */
+.mnav, .mnav.open { will-change: transform, clip-path; }
+.mnav.open { transform: translateZ(0); }
+.mnav { background: #fff; }

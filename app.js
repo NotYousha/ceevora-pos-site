@@ -1,5 +1,6 @@
-// Paste the YouTube video ID here once the marketing video is uploaded (e.g. "dQw4w9WgXcQ").
-const YOUTUBE_ID = "";
+// Settings live in config.js.
+const CFG = window.CEEVORA || {};
+const YOUTUBE_ID = CFG.youtubeId || "";
 
 const $ = (s, r = document) => r.querySelector(s);
 const SHOTS = [
@@ -61,14 +62,19 @@ function showType(k) {
 function moveLens() {
   const b = $(`#typeTabs [data-type="${type}"]`), seg = $("#typeTabs"), lens = $("#segLens");
   if (!b || !b.offsetWidth) return;
-  lens.style.width = `${b.offsetWidth}px`;
-  lens.style.height = `${b.offsetHeight}px`;
-  lens.style.transform = `translate(${b.offsetLeft}px, ${b.offsetTop}px)`;
-  // keep the chosen tab in view when the row scrolls sideways on phones
-  const left = b.offsetLeft - (seg.clientWidth - b.offsetWidth) / 2;
+  // measure against the selector itself (offsetLeft depends on the offsetParent, which differs in Safari)
+  const r = b.getBoundingClientRect(), sr = seg.getBoundingClientRect();
+  const x = r.left - sr.left - seg.clientLeft + seg.scrollLeft, y = r.top - sr.top - seg.clientTop;
+  lens.style.width = `${r.width}px`;
+  lens.style.height = `${r.height}px`;
+  lens.style.transform = `translate(${x}px, ${y}px)`;
+  // keep the chosen tab in view when the row scrolls sideways
+  const left = x - (seg.clientWidth - r.width) / 2;
   seg.scrollTo({ left, behavior: reduceMotion ? "auto" : "smooth" });
 }
 addEventListener("resize", moveLens);
+if ("ResizeObserver" in window) new ResizeObserver(() => moveLens()).observe(document.querySelector("#typeTabs"));
+document.fonts?.ready.then(() => moveLens());
 
 function render() {
   document.documentElement.lang = lang;
@@ -84,9 +90,14 @@ function render() {
   const other = lang === "ar" ? "en" : "ar";
   $("#langBtn").lang = other;
   $("#langBtn").classList.toggle("lang-big", lang === "ar");
-  $("#langFlag").src = `assets/flags/${other === "en" ? "ca" : "sa"}.svg`;
+  const fl = $("#langFlag"), ca = other === "en";
+  fl.src = `assets/flags/${ca ? "ca" : "sa"}.webp`; // 320px-wide masters, drawn at ~28px, so they stay sharp on any screen
+  fl.width = ca ? 32 : 27; fl.height = ca ? 16 : 18;
   $("#langLabel").textContent = STR[other].lang_full;
   fillCountries();
+  renderQuote();
+  renderCustomers();
+  setLinks();
   showGal(gal);
   showType(type);
 }
@@ -148,7 +159,7 @@ document.querySelectorAll("[data-note]").forEach((a) => a.addEventListener("clic
 }));
 
 // Demo form: countries drive the city list and the dialling code.
-const EMAIL = "info@ceevora.com";
+const EMAIL = CFG.email || "info@ceevora.com";
 const C = (en, ar, dial, eg, cities) => ({ en, ar, dial, eg, cities: cities.map(([e, a]) => ({ en: e, ar: a })) });
 const COUNTRIES = {
   SA: C("Saudi Arabia", "المملكة العربية السعودية", "+966", "50 123 4567", [["Riyadh","الرياض"],["Jeddah","جدة"],["Makkah","مكة المكرمة"],["Madinah","المدينة المنورة"],["Dammam","الدمام"],["Khobar","الخبر"],["Dhahran","الظهران"],["Al Ahsa","الأحساء"],["Jubail","الجبيل"],["Taif","الطائف"],["Tabuk","تبوك"],["Abha","أبها"],["Khamis Mushait","خميس مشيط"],["Buraidah","بريدة"],["Hail","حائل"],["Jazan","جازان"],["Najran","نجران"],["Yanbu","ينبع"]]),
@@ -236,7 +247,6 @@ form.onsubmit = async (e) => {
   }
 };
 
-render();
 
 // ---------- motion (transform/opacity only; all of it skipped for reduced motion) ----------
 document.documentElement.classList.add("js");
@@ -295,14 +305,121 @@ if (!reduceMotion && "IntersectionObserver" in window) {
 // Mobile menu
 {
   const btn = $("#burger"), menu = $("#mnav");
+  let isOpen = false, timer = 0;
   const set = (open) => {
+    if (open === isOpen) return;
+    isOpen = open;
     btn.setAttribute("aria-expanded", open);
     btn.setAttribute("aria-label", t(open ? "closeNavigation" : "openNavigation"));
-    menu.hidden = !open;
-    document.body.classList.toggle("menu-open", open);
+    clearTimeout(timer);
+    if (open) {
+      menu.hidden = false;
+      void menu.offsetHeight; // commit the closed state so the reveal transitions
+      menu.classList.add("open");
+    } else {
+      menu.classList.remove("open");
+      timer = setTimeout(() => { menu.hidden = true; }, reduceMotion ? 0 : 380);
+    }
   };
-  btn.onclick = () => set(menu.hidden);
+  btn.onclick = () => set(!isOpen);
   menu.onclick = (e) => { if (e.target.closest("a")) set(false); };
-  addEventListener("keydown", (e) => { if (e.key === "Escape" && !menu.hidden) { set(false); btn.focus(); } });
+  addEventListener("keydown", (e) => { if (e.key === "Escape" && isOpen) { set(false); btn.focus(); } });
   matchMedia("(min-width: 861px)").addEventListener("change", (m) => m.matches && set(false));
 }
+
+// ---------- quote builder ----------
+const QMODS = ["inventory", "accounting", "kitchen", "ai", "delivery"];
+const qf = $("#qform");
+$("#qmods").innerHTML = QMODS.map((m) =>
+  `<label class="mod-opt"><input type="checkbox" name="qm" value="${m}"><span data-t="qm_${m}"></span></label>`).join("");
+const sar = (n) => new Intl.NumberFormat(lang === "ar" ? "ar-SA" : "en-SA", { maximumFractionDigits: 0 }).format(n) + (lang === "ar" ? " ر.س" : " SAR");
+function quoteState() {
+  const clamp = (el) => Math.max(+el.min, Math.min(+el.max, Math.round(+el.value) || +el.min));
+  const shops = clamp($("#qshops")), terms = Math.max(shops, clamp($("#qterms")));
+  return { type: $("#qtype").value, shops, terms, mods: [...qf.querySelectorAll("[name=qm]:checked")].map((c) => c.value) };
+}
+function renderQuote() {
+  const cur = $("#qtype").value || type;
+  $("#qtype").innerHTML = ["cafe", "bakery", "restaurant", "retail"].map((k) => `<option value="${k}">${t("type_" + k)}</option>`).join("");
+  $("#qtype").value = cur;
+  qf.querySelectorAll("[data-t]").forEach((el) => { el.textContent = t(el.dataset.t); });
+  const q = quoteState();
+  $("#qlines").innerHTML = [
+    t("type_" + q.type),
+    t("q_shops_n").replace("{n}", q.shops) + " · " + t("q_terms_n").replace("{n}", q.terms),
+    t("q_core"),
+    ...q.mods.map((m) => "+ " + t("qm_" + m)),
+  ].map((x) => `<li>${x}</li>`).join("");
+  const P = CFG.pricing;
+  if (P) {
+    const monthly = q.shops * (P.perShopMonthly || 0) + (q.terms - q.shops) * (P.perExtraTerminalMonthly || 0) +
+      q.mods.reduce((sum, m) => sum + (P.modules?.[m] || 0) * q.shops, 0);
+    $("#qprice").innerHTML = `<span>${t("q_monthly")}</span><strong>${sar(monthly)}</strong>` +
+      (P.setupPerShop ? `<span>${t("q_setup")}</span><b>${sar(P.setupPerShop * q.shops)}</b>` : "");
+  } else {
+    $("#qprice").innerHTML = `<strong class="qcustom">${t("q_custom")}</strong>`;
+  }
+}
+qf.addEventListener("input", renderQuote);
+qf.addEventListener("change", renderQuote);
+qf.addEventListener("submit", (e) => e.preventDefault());
+qf.addEventListener("click", (e) => {
+  const b = e.target.closest("[data-step]"); if (!b) return;
+  const el = $("#" + b.dataset.for);
+  el.value = Math.max(+el.min, Math.min(+el.max, (+el.value || 0) + +b.dataset.step));
+  if (el.id === "qshops" && +$("#qterms").value < +el.value) $("#qterms").value = el.value;
+  renderQuote();
+});
+// "Get my quote" carries the setup into the demo form.
+$("#qcta").addEventListener("click", () => {
+  const q = quoteState();
+  form.locations.value = q.shops;
+  form.terminals.value = q.terms;
+  const line = `${STR.en["type_" + q.type]}; modules: ${q.mods.map((m) => STR.en["qm_" + m]).join(", ") || "core POS only"}`;
+  form.notes.value = form.notes.value.replace(/^.*modules: .*$/m, "").trim();
+  form.notes.value = (form.notes.value ? form.notes.value + "\n" : "") + line;
+});
+$("#typeTabs").addEventListener("click", () => { $("#qtype").value = type; renderQuote(); });
+
+// ---------- customers (real ones only, from config.js) ----------
+function renderCustomers() {
+  const list = CFG.customers || [];
+  $("#customers").hidden = !list.length;
+  const esc = (x) => String(x ?? "").replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]);
+  $("#custList").innerHTML = list.map((c) => `<figure class="cust-card">
+    ${c.logo ? `<img src="${esc(c.logo)}" alt="${esc(c.name)}" loading="lazy" height="48">` : `<b>${esc(c.name)}</b>`}
+    ${c["quote_" + lang] ? `<blockquote>${esc(c["quote_" + lang])}</blockquote>` : ""}
+    <figcaption>${esc(c.person ? c.person + ", " : "")}${esc(c.name)}${c.city ? " · " + esc(c.city) : ""}</figcaption></figure>`).join("");
+}
+
+// ---------- WhatsApp + live demo links ----------
+function setLinks() {
+  const wa = $("#wa"), digits = String(CFG.whatsapp || "").replace(/\D/g, "");
+  wa.hidden = !digits;
+  if (digits) wa.href = `https://wa.me/${digits}?text=${encodeURIComponent(t("wa_msg"))}`;
+  const demo = $("#tryDemo");
+  demo.hidden = !CFG.demoUrl;
+  if (CFG.demoUrl) demo.href = CFG.demoUrl;
+}
+
+// ---------- analytics, only after consent ----------
+if (CFG.gaId) {
+  let choice = null;
+  try { choice = localStorage.getItem("cookies"); } catch {}
+  const loadGA = () => {
+    const sc = document.createElement("script");
+    sc.async = true; sc.src = `https://www.googletagmanager.com/gtag/js?id=${encodeURIComponent(CFG.gaId)}`;
+    document.head.appendChild(sc);
+    window.dataLayer = window.dataLayer || [];
+    window.gtag = function () { dataLayer.push(arguments); };
+    gtag("js", new Date()); gtag("config", CFG.gaId);
+    // count demo requests as conversions
+    $("#sentBox") && new MutationObserver(() => { if (!$("#sentBox").hidden) gtag("event", "generate_lead"); }).observe($("#sentBox"), { attributes: true });
+  };
+  const decide = (yes) => { try { localStorage.setItem("cookies", yes ? "yes" : "no"); } catch {} $("#cookie").hidden = true; if (yes) loadGA(); };
+  if (choice === "yes") loadGA(); else if (choice !== "no") $("#cookie").hidden = false;
+  $("#ckYes").onclick = () => decide(true);
+  $("#ckNo").onclick = () => decide(false);
+}
+
+render();
