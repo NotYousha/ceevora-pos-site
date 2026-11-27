@@ -474,3 +474,16 @@ fieldset { border: 0; padding: 0; margin: 0; }
 .mnav, .mnav.open { will-change: transform, clip-path; }
 .mnav.open { transform: translateZ(0); }
 .mnav { background: #fff; }
+
+/* Safari draws backdrop blur as a square, ignoring border-radius, so every glass surface leaked past its rounded
+   edge. Clip each one to its own shape. (Menu and bottom bar animate their own clip-path above.) */
+.lg:not(.mnav):not(.mcta) { clip-path: inset(0 round var(--lg-r, 999px)); }
+.hero-shot, .video-card { --lg-r: var(--radius); }
+.zatca { --lg-r: 28px; }
+.form, .qcard { --lg-r: 26px; }
+.cookie { --lg-r: 20px; }
+.play { clip-path: circle(50%) !important; }
+@media (max-width: 520px) { .seg { --lg-r: 24px; } }
+/* small pills: an even, complete outline (the fading rim read as a broken edge at this size) */
+.lg-chip-pill, .lg-btn, .seg { --lg-rim-hi: rgba(255,255,255,.6); --lg-rim-lo: rgba(255,255,255,.34); }
+.seg { --lg-rim-hi: rgba(13,43,45,.22); --lg-rim-lo: rgba(13,43,45,.16); }
