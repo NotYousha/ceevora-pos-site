@@ -20,6 +20,10 @@ Everything the team needs to switch on lives in `config.js`. Empty values keep a
 | `pricing` | Real SAR estimates in the quote builder (otherwise it says "custom quote") |
 | `customers` | "Shops running on Ceevora" section. Real customers with permission only |
 
+## Links for ads
+- Arabic ads: link to `https://notyousha.github.io/ceevora-pos-site/?lang=ar` (visitors whose phone is set to Arabic get Arabic anyway).
+- Add UTM tags so each demo request email says which ad brought the visitor, e.g. `?lang=ar&utm_source=instagram&utm_campaign=video1`.
+
 ## Using your own domain
 1. In the repo: Settings → Pages → Custom domain → enter e.g. `www.ceevora.com`, save, tick "Enforce HTTPS".
 2. At the domain registrar: add a CNAME record `www` → `notyousha.github.io`.
