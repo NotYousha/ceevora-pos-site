@@ -1,0 +1,68 @@
+<!doctype html>
+<!-- Ad creative template. Rendered by ad-kit/render.py into story / square / wide JPGs in Arabic and English.
+     Query: ?lang=ar|en&fmt=story|square|wide -->
+<html>
+<head>
+<meta charset="utf-8">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;600;700&family=IBM+Plex+Sans+Arabic:wght@400;600;700&display=block" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; margin: 0; }
+  html, body { width: var(--w); height: var(--h); overflow: hidden; }
+  body {
+    font-family: "IBM Plex Sans", "IBM Plex Sans Arabic", sans-serif; color: #eaf6f2;
+    background:
+      radial-gradient(60% 45% at 85% 5%, rgba(31,159,127,.65), transparent 70%),
+      radial-gradient(55% 40% at 0% 100%, rgba(42,111,176,.45), transparent 70%),
+      radial-gradient(35% 25% at 60% 55%, rgba(201,162,74,.18), transparent 70%),
+      linear-gradient(160deg, #0f3a3b, #071b1d 70%);
+    display: grid; padding: var(--pad); gap: var(--gap);
+  }
+  [dir="rtl"] body, body[dir="rtl"] { font-family: "IBM Plex Sans Arabic", "IBM Plex Sans", sans-serif; }
+  .top { display: flex; align-items: center; justify-content: space-between; }
+  .logo { height: var(--logo); }
+  .tag { font-weight: 600; font-size: var(--small); color: #8fe3c6; padding: .45em 1em; border-radius: 999px; border: 1.5px solid rgba(143,227,198,.5); background: rgba(143,227,198,.08); }
+  h1 { font-size: var(--h1); line-height: 1.08; font-weight: 700; letter-spacing: -.02em; }
+  [dir="rtl"] h1 { letter-spacing: 0; line-height: 1.3; }
+  h1 span { display: block; color: #8fe3c6; }
+  .sub { font-size: var(--p); color: #c9e3dc; max-width: 30ch; line-height: 1.45; }
+  .shot { position: relative; border-radius: calc(var(--r) + 10px); padding: 12px; background: rgba(255,255,255,.1);
+          box-shadow: inset 0 0 0 1.5px rgba(255,255,255,.35), 0 40px 80px -30px rgba(0,0,0,.6); }
+  .shot img { display: block; width: 100%; border-radius: var(--r); }
+  .chips { display: flex; flex-wrap: wrap; gap: 12px; }
+  .chips b { font-weight: 600; font-size: var(--small); padding: .5em 1em; border-radius: 999px; background: rgba(255,255,255,.1); box-shadow: inset 0 0 0 1.5px rgba(255,255,255,.3); }
+  .cta { display: flex; align-items: center; justify-content: space-between; gap: 20px; }
+  .btn { font-weight: 700; font-size: var(--p); padding: .75em 1.4em; border-radius: 999px; background: #0d6b57; color: #fff; box-shadow: 0 14px 30px -12px rgba(0,0,0,.6); }
+  .url { font-size: var(--small); color: #c9e3dc; direction: ltr; }
+  /* formats */
+  .story  { --w: 1080px; --h: 1920px; --pad: 96px 80px 110px; --gap: 44px; --h1: 104px; --p: 40px; --small: 30px; --logo: 64px; --r: 18px; grid-template-rows: auto auto 1fr auto auto; }
+  .chips { align-content: start; align-items: center; }
+  .square { --w: 1080px; --h: 1080px; --pad: 70px; --gap: 30px; --h1: 76px; --p: 30px; --small: 24px; --logo: 50px; --r: 14px; grid-template-rows: auto auto 1fr auto; }
+  .wide   { --w: 1200px; --h: 628px; --pad: 56px 60px; --gap: 22px; --h1: 60px; --p: 24px; --small: 19px; --logo: 42px; --r: 12px; grid-template-columns: 1fr 1.05fr; grid-template-rows: auto 1fr auto; column-gap: 44px; }
+  .wide .top { grid-column: 1 / -1; }
+  .wide .copy { display: grid; gap: 18px; align-content: center; }
+  .wide .shot { align-self: center; }
+  .wide .cta { grid-column: 1 / -1; }
+  .square .chips, .wide .chips { display: none; }
+  .square .shot { align-self: end; }
+  .story .shot { align-self: center; transform: perspective(1600px) rotateX(6deg); }
+</style>
+</head>
+<body>
+  <div class="top"><img class="logo" src="../assets/mark-dark.webp" alt=""><span class="tag" id="tag"></span></div>
+  <div class="copy"><h1 id="h1"></h1><p class="sub" id="sub"></p></div>
+  <div class="shot"><img src="../assets/cevora-dashboard.webp" alt=""></div>
+  <div class="chips" id="chips"></div>
+  <div class="cta"><span class="btn" id="btn"></span><span class="url">ceevora.com</span></div>
+<script>
+  const q = new URLSearchParams(location.search), lang = q.get("lang") || "ar", fmt = q.get("fmt") || "story";
+  const T = {
+    ar: { tag: "للمملكة العربية السعودية", h1: ["أدر عمليات البيع.", "تابع أعمالك بالكامل."], sub: "نقاط البيع والمخزون والتقارير والمحاسبة لكل فروعك، في نظام واحد.", chips: ["العربية والإنجليزية", "مدى وفيزا وماستركارد", "يواصل البيع دون اتصال", "تقارير ضريبة القيمة المضافة"], btn: "احجز عرضًا توضيحيًا" },
+    en: { tag: "For Saudi Arabia", h1: ["Run the counter.", "See the whole business."], sub: "Checkout, inventory, reporting and accounting for every shop, in one system.", chips: ["Arabic and English", "mada, Visa and Mastercard", "Keeps selling offline", "VAT sales reports"], btn: "Book a free demo" },
+  }[lang];
+  document.documentElement.lang = lang; document.body.dir = lang === "ar" ? "rtl" : "ltr"; document.body.className = fmt;
+  tag.textContent = T.tag; h1.innerHTML = `${T.h1[0]}<span>${T.h1[1]}</span>`; sub.textContent = T.sub; btn.textContent = T.btn;
+  chips.innerHTML = T.chips.map((c) => `<b>${c}</b>`).join("");
+  if (fmt === "wide") { const c = document.querySelector(".copy"); c.after(document.querySelector(".shot")); }
+</script>
+</body>
+</html>

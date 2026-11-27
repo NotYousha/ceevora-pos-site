@@ -1,6 +1,7 @@
 // Settings live in config.js.
 const CFG = window.CEEVORA || {};
-const YOUTUBE_ID = CFG.youtubeId || "";
+const videoId = () => (lang === "ar" && CFG.youtubeIdAr) || CFG.youtubeId || CFG.youtubeIdAr || "";
+
 
 const $ = (s, r = document) => r.querySelector(s);
 const SHOTS = [
@@ -25,7 +26,7 @@ function swapImg(el, k) {
   el.srcset = srcset(k); el.src = img(k);
 }
 
-const reduceMotion = matchMedia("(prefers-reduced-motion: reduce)").matches || document.documentElement.dataset.motion === "reduce";
+const reduceMotion = matchMedia("(prefers-reduced-motion: reduce)").matches;
 // Language: ?lang=ar in the link wins (for Arabic ads), then the visitor's saved choice, then their phone's language.
 const params = new URLSearchParams(location.search);
 let lang = "en";
@@ -118,6 +119,7 @@ function render() {
   window.__syncSettings?.();
   renderQuote();
   renderCustomers();
+  renderPlans();
   setLinks();
   showGal(gal);
   showType(type);
@@ -168,10 +170,10 @@ viewer.addEventListener("close", () => { $("#viewerBody").innerHTML = ""; });
 viewer.onclick = (e) => { if (e.target === viewer || e.target.closest(".close")) viewer.close(); };
 $("#galImgBtn").onclick = () => openViewer(`<img src="${img($("#galImg").dataset.k)}" alt="${$("#galImg").alt}">`);
 
-if (YOUTUBE_ID) {
+if (CFG.youtubeId || CFG.youtubeIdAr) {
   $("#videoSoon").hidden = true;
   $("#videoBtn").onclick = () => openViewer(
-    `<iframe src="https://www.youtube-nocookie.com/embed/${encodeURIComponent(YOUTUBE_ID)}?autoplay=1&rel=0&hl=${lang}&cc_load_policy=1" title="Ceevora POS tour" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe>`);
+    `<iframe src="https://www.youtube-nocookie.com/embed/${encodeURIComponent(videoId())}?autoplay=1&rel=0&hl=${lang}&cc_load_policy=1" title="Ceevora POS tour" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe>`);
 } else {
   $("#videoBtn").onclick = () => $("#contact").scrollIntoView({ behavior: "smooth" });
 }
@@ -234,6 +236,8 @@ function emailBody() {
     Company: v("company"), Name: v("name"), Email: v("email"),
     Phone: `${v("dial")} ${v("phone")}`, Country: c.en, City: city,
     Locations: v("locations"), "POS terminals": v("terminals"),
+    "Contact by": form.querySelector("[name=contactBy]:checked")?.value || "-",
+    "Preferred time": v("when") ? `${new Date(v("when")).toString().slice(0, 21)} (visitor's time, ${Intl.DateTimeFormat().resolvedOptions().timeZone})` : "-",
     Requirements: v("notes") || "-", "Site language": lang === "ar" ? "Arabic" : "English",
     "Came from": Object.entries(UTM).map(([k, v]) => `${k}=${v}`).join(", ") || "direct",
   };
@@ -270,6 +274,7 @@ form.onsubmit = async (e) => {
     if (!r.ok || String(j.success) !== "true") throw new Error(j.message || r.status);
     form.hidden = true;
     $("#sentBox").hidden = false;
+    showCalendar(form.when.value);
   } catch {
     $("#formErr").textContent = t("send_failed");
     const body = Object.entries(data).map(([k, v]) => `${k}: ${v}`).join("\n");
@@ -462,7 +467,7 @@ if (CFG.gaId) {
   const root = document.documentElement, btn = $("#gearBtn"), panel = $("#settings");
   const get = (k, d) => { try { return localStorage.getItem(k) || d; } catch { return d; } };
   const put = (k, v) => { try { v === "system" ? localStorage.removeItem(k) : localStorage.setItem(k, v); } catch {} };
-  const current = { theme: () => get("theme", "system"), motion: () => get("motion", "system"), lang: () => lang };
+  const current = { theme: () => get("theme", "system"), lang: () => lang };
   const sync = () => panel.querySelectorAll(".choice").forEach((c) => {
     const opts = [...c.querySelectorAll("button")], v = current[c.dataset.pref]();
     const i = Math.max(0, opts.findIndex((b) => b.dataset.v === v));
@@ -471,7 +476,6 @@ if (CFG.gaId) {
   });
   const apply = {
     theme: (v) => { put("theme", v); v === "system" ? delete root.dataset.theme : (root.dataset.theme = v); },
-    motion: (v) => { put("motion", v); v === "reduce" ? (root.dataset.motion = "reduce") : delete root.dataset.motion; if (v === "reduce") stopTour(); },
     lang: (v) => setLang(v),
   };
   panel.addEventListener("click", (e) => {
@@ -498,5 +502,66 @@ if (CFG.gaId) {
   addEventListener("scroll", () => open && setOpen(false), { passive: true });
   window.__syncSettings = sync;
 }
+
+
+// ---------- add-to-calendar after a demo request (only when a preferred time was picked) ----------
+function showCalendar(when) {
+  if (!when) return;
+  const start = new Date(when); if (isNaN(start)) return;
+  const end = new Date(start.getTime() + 30 * 60000);
+  const z = (d) => d.toISOString().replace(/[-:]/g, "").replace(/[.][0-9]{3}/, "");
+  const title = t("cal_title"), details = `${t("cal_note")} ${EMAIL}`;
+  $("#calGoogle").href = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(title)}&dates=${z(start)}/${z(end)}&details=${encodeURIComponent(details)}`;
+  const esc = (x) => x.replace(/([,;])/g, "$1".replace("$1", String.fromCharCode(92) + "$1"));
+  const ics = ["BEGIN:VCALENDAR", "VERSION:2.0", "PRODID:-//Ceevora//Demo//EN", "BEGIN:VEVENT",
+    `UID:${Date.now()}@ceevora`, `DTSTAMP:${z(new Date())}`, `DTSTART:${z(start)}`, `DTEND:${z(end)}`,
+    `SUMMARY:${esc(title)}`, `DESCRIPTION:${esc(details)}`,
+    "BEGIN:VALARM", "TRIGGER:-PT30M", "ACTION:DISPLAY", `DESCRIPTION:${esc(title)}`, "END:VALARM",
+    "END:VEVENT", "END:VCALENDAR"].join(String.fromCharCode(13, 10));
+  $("#calIcs").href = URL.createObjectURL(new Blob([ics], { type: "text/calendar" }));
+  $("#calBox").hidden = false;
+}
+// earliest pickable demo time: one hour from now, on the quarter hour
+{
+  const d = new Date(Date.now() + 3600000); d.setMinutes(Math.ceil(d.getMinutes() / 15) * 15, 0, 0);
+  const pad = (n) => String(n).padStart(2, "0");
+  form.when.min = `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
+}
+
+// ---------- compare plans (from config.js; hidden until real plans exist) ----------
+const FEATURES = ["payments", "shifts", "catalog", "reporting", "support", "inventory", "customers", "branches", "kitchen", "accounting", "ai", "integrations"];
+function renderPlans() {
+  const plans = CFG.plans || [];
+  $("#plans").hidden = !plans.length;
+  if (!plans.length) return;
+  const esc = (x) => String(x ?? "").replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]);
+  const name = (p) => esc(p["name_" + lang] || p.name_en || p.name);
+  const check = '<svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+  const used = FEATURES.filter((f) => plans.some((p) => (p.features || []).includes(f)));
+  $("#plansTable").innerHTML =
+    `<thead><tr><th scope="col"><span class="sr">${t("plans_title")}</span></th>${plans.map((p) => `<th scope="col" class="${p.popular ? "pop" : ""}">
+      ${p.popular ? `<span class="pop-tag">${t("popular")}</span>` : ""}<span class="pname">${name(p)}</span>
+      <span class="pprice">${p.price == null ? t("custom_price") : sar(p.price)}</span>${p.price == null ? "" : `<span class="pper">${t("per_month")}</span>`}
+      ${p.setup ? `<span class="psetup">${t("setup_fee").replace("{fee}", sar(p.setup))}</span>` : ""}</th>`).join("")}</tr></thead>
+    <tbody>${used.map((f) => `<tr><th scope="row">${t("f_" + f)}</th>${plans.map((p) => `<td class="${p.popular ? "pop" : ""}">${(p.features || []).includes(f) ? check + `<span class="sr">✓</span>` : '<span class="dash" aria-label="—">—</span>'}</td>`).join("")}</tr>`).join("")}</tbody>
+    <tfoot><tr><td></td>${plans.map((p, i) => `<td class="${p.popular ? "pop" : ""}"><a class="btn ${p.popular ? "btn-solid" : "btn-line"}" href="#contact" data-plan="${i}">${t("choose_plan").replace("{plan}", name(p))}</a></td>`).join("")}</tr></tfoot>`;
+}
+$("#plansTable").addEventListener("click", (e) => {
+  const a = e.target.closest("[data-plan]"); if (!a) return;
+  const p = CFG.plans[+a.dataset.plan], line = `Plan: ${p.name_en || p.name}`;
+  form.notes.value = form.notes.value.replace(/^Plan: .*$/m, "").trim();
+  form.notes.value = line + (form.notes.value ? String.fromCharCode(10) + form.notes.value : "");
+});
+
+// ---------- share ----------
+$("#shareBtn").onclick = async () => {
+  const url = new URL(location.href); url.hash = ""; url.searchParams.set("lang", lang);
+  const data = { title: t("siteTitle"), text: t("heroBody"), url: url.toString() };
+  try {
+    if (navigator.share) return await navigator.share(data);
+    await navigator.clipboard.writeText(data.url);
+    const s = $("#shareBtn span"); s.textContent = t("copied"); setTimeout(() => { s.textContent = t("share"); }, 1800);
+  } catch {}
+};
 
 render();

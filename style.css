@@ -576,3 +576,49 @@ html { scrollbar-color: color-mix(in srgb, var(--ink-2) 60%, transparent) var(--
 @media (max-width: 380px) { .gear { width: 40px; height: 40px; } .burger { width: 40px; height: 40px; } }
 .seg-lens { background: var(--thumb); }
 .seg button[aria-selected="true"] { color: var(--ink); }
+
+/* ---------- compare plans ---------- */
+.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+.plans-scroll { overflow-x: auto; margin-inline: -16px; padding-inline: 16px; scrollbar-width: thin; }
+.plans { width: 100%; min-width: 640px; border-collapse: separate; border-spacing: 0; font-size: .95rem; }
+.plans th, .plans td { padding: 14px 16px; text-align: center; border-bottom: 1px solid var(--line); }
+.plans tbody th { text-align: start; font-weight: 500; color: var(--ink); }
+.plans thead th { vertical-align: bottom; padding-top: 30px; position: relative; }
+.plans .pname { display: block; font-size: 1.1rem; font-weight: 700; }
+.plans .pprice { display: block; font-size: 1.7rem; font-weight: 700; margin-top: 6px; font-variant-numeric: tabular-nums; color: var(--ink); }
+.plans .pper, .plans .psetup { display: block; font-size: .8rem; font-weight: 400; color: var(--ink-2); }
+.plans .pop { background: color-mix(in srgb, var(--accent-ink) 8%, transparent); }
+.plans thead .pop { border-radius: 18px 18px 0 0; }
+.plans tfoot .pop { border-radius: 0 0 18px 18px; }
+.plans tfoot td { border-bottom: 0; padding-top: 18px; padding-bottom: 20px; }
+.pop-tag { position: absolute; top: 8px; inset-inline: 0; margin-inline: auto; width: max-content; font-size: .72rem; font-weight: 700; padding: 3px 10px; border-radius: 999px; background: var(--brand); color: #fff; }
+.plans td svg { color: var(--accent-ink); vertical-align: middle; }
+.plans .dash { color: var(--ink-2); opacity: .5; }
+.btn-line { box-shadow: inset 0 0 0 1.5px var(--accent-ink); color: var(--accent-ink); background: transparent; }
+
+/* ---------- preferred contact (segmented, iOS-like) ---------- */
+.pc { border: 0; padding: 0; margin: 0; display: grid; gap: 6px; font-size: .9rem; font-weight: 500; }
+.pc legend { padding: 0; margin-bottom: 6px; }
+.pc-opts { display: grid; grid-template-columns: repeat(3, 1fr); gap: 4px; padding: 3px; border-radius: 12px; background: rgba(3,22,24,.35); border: 1px solid rgba(255,255,255,.18); }
+.pc-opts label { position: relative; display: block; cursor: pointer; }
+.pc-opts input { position: absolute; opacity: 0; inset: 0; margin: 0; cursor: pointer; }
+.pc-opts span { display: grid; place-items: center; min-height: 40px; padding: 6px; border-radius: 9px; text-align: center; font-size: .88rem; transition: background-color .2s ease, color .2s ease; color: #c9e3dc; }
+.pc-opts input:checked + span { background: rgba(255,255,255,.92); color: #0d2b2d; font-weight: 600; }
+.pc-opts input:focus-visible + span { outline: 2px solid var(--mint); outline-offset: 1px; }
+.form input[type="datetime-local"] { color-scheme: dark; }
+
+/* ---------- calendar + share ---------- */
+.cal { display: grid; gap: 12px; justify-items: center; margin-top: 6px; }
+.cal-btns { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; }
+.share { font: inherit; font-size: .85rem; font-weight: 600; display: inline-flex; align-items: center; gap: 6px; padding: 8px 14px; min-height: 36px; border-radius: 999px; border: 1px solid var(--line); background: var(--card); color: var(--ink); cursor: pointer; margin-inline-end: 12px; }
+.share:hover { border-color: var(--accent-ink); color: var(--accent-ink); }
+.copy { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+/* the hidden screen-reader labels must stay inside the scrolling table, not stretch the page */
+.plans-scroll { position: relative; }
+.plans td { position: relative; }
+@media (max-width: 720px) {
+  .plans { min-width: 560px; font-size: .9rem; }
+  .plans tbody th, .plans thead th:first-child, .plans tfoot td:first-child { position: sticky; inset-inline-start: 0; z-index: 1; min-width: 150px; background: var(--paper); box-shadow: 1px 0 0 var(--line); }
+  [dir="rtl"] .plans tbody th { box-shadow: -1px 0 0 var(--line); }
+  .plans th, .plans td { padding: 12px 10px; }
+}

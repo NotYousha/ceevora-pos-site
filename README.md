@@ -14,7 +14,8 @@ Everything the team needs to switch on lives in `config.js`. Empty values keep a
 | Setting | What it turns on |
 | --- | --- |
 | `whatsapp` | Floating WhatsApp chat button with a ready-made message |
-| `youtubeId` | The marketing video in the "Watch the tour" pop-up |
+| `youtubeId` / `youtubeIdAr` | The marketing video in the "Watch the tour" pop-up; Arabic visitors get the Arabic one |
+| `plans` | The "Compare plans" table (see the example in config.js) |
 | `demoUrl` | "Try the live demo" button in the hero |
 | `gaId` | Google Analytics 4, loaded only after the visitor accepts the cookie notice; demo requests are logged as `generate_lead` |
 | `pricing` | Real SAR estimates in the quote builder (otherwise it says "custom quote") |
@@ -23,6 +24,9 @@ Everything the team needs to switch on lives in `config.js`. Empty values keep a
 ## Links for ads
 - Arabic ads: link to `https://notyousha.github.io/ceevora-pos-site/?lang=ar` (visitors whose phone is set to Arabic get Arabic anyway).
 - Add UTM tags so each demo request email says which ad brought the visitor, e.g. `?lang=ar&utm_source=instagram&utm_campaign=video1`.
+
+## Ad kit (ad-kit/)
+Ready-made ad images in Arabic and English: `ceevora-story-*.jpg` (1080x1920, Instagram/TikTok/Snapchat stories), `ceevora-square-*.jpg` (1080x1080 feed), `ceevora-wide-*.jpg` (1200x628, link previews / YouTube). To change the wording, edit `ad-kit/ad.html`, start `python -m http.server 8765` in the repo root and run `python ad-kit/render.py`.
 
 ## Using your own domain
 1. In the repo: Settings → Pages → Custom domain → enter e.g. `www.ceevora.com`, save, tick "Enforce HTTPS".
