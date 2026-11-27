@@ -487,3 +487,11 @@ fieldset { border: 0; padding: 0; margin: 0; }
 /* small pills: an even, complete outline (the fading rim read as a broken edge at this size) */
 .lg-chip-pill, .lg-btn, .seg { --lg-rim-hi: rgba(255,255,255,.6); --lg-rim-lo: rgba(255,255,255,.34); }
 .seg { --lg-rim-hi: rgba(13,43,45,.22); --lg-rim-lo: rgba(13,43,45,.16); }
+
+/* ---------- performance: blobs are plain radial gradients (no filter, no animation) ----------
+   Blurred, drifting blobs under ~17 glass surfaces forced every backdrop blur to re-render each frame
+   (Lighthouse mobile: ~7 s of main-thread work). Gradients look the same and cost nothing per frame. */
+.blobs i { filter: none !important; animation: none !important; opacity: 1 !important; }
+.blobs i:nth-child(1) { background: radial-gradient(closest-side, rgba(31,159,127,.55), transparent); width: 760px; height: 760px; top: -260px; }
+.blobs i:nth-child(2) { background: radial-gradient(closest-side, rgba(42,111,176,.35), transparent); width: 640px; height: 640px; bottom: -280px; }
+.blobs i:nth-child(3) { background: radial-gradient(closest-side, rgba(201,162,74,.2), transparent); width: 460px; height: 460px; }
