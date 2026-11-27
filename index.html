@@ -13,7 +13,8 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css">
-<script src="strings.js"></script>
+<script defer src="strings.js"></script>
+<script defer src="app.js"></script>
 </head>
 <body>
 <a class="skip" href="#main" data-t="skip">Skip to content</a>
@@ -27,7 +28,7 @@
     <a href="#faq" data-t="faq">FAQ</a>
   </nav>
   <div class="nav-end">
-    <button class="lang lg-chip" id="langBtn" type="button" data-t="lang_switch" lang="ar">العربية</button>
+    <button class="lang lg-chip" id="langBtn" type="button" lang="ar"><img id="langFlag" src="assets/flags/sa.svg" alt="" width="21" height="14"><span id="langLabel">العربية</span></button>
     <a class="btn btn-solid" href="#contact" data-t="nav_contact">Book a demo</a>
   </div>
 </header>
@@ -39,7 +40,7 @@
     <h1><span data-t="heroLine1">Run the counter.</span><br><span class="accent" data-t="heroLine2">See the whole business.</span></h1>
     <div class="hero-side">
       <p class="badge" data-t="heroBadge">Point of sale for Saudi Arabia</p>
-      <p class="lead" data-t="heroBody"></p>
+      <p class="lead" data-t="heroBody">Connect checkout, inventory, reporting and accounting across your shops. Built for cafés, donut shops, bakeries, restaurants and specialty retailers.</p>
       <div class="ctas">
         <a class="btn btn-solid" href="#contact" data-t="nav_contact">Book a demo</a>
         <a class="btn lg lg-btn" href="#video"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path d="M8 5v14l11-7z" fill="currentColor"/></svg><span data-t="watch">Watch the tour</span></a>
@@ -51,22 +52,22 @@
       <img src="assets/cevora-dashboard.webp" alt="Ceevora management console showing today's sales" width="1896" height="830" fetchpriority="high">
     </figure>
     <ul class="trust">
-      <li class="lg lg-chip-pill" data-t="trust_1"></li>
-      <li class="lg lg-chip-pill" data-t="trust_2"></li>
-      <li class="lg lg-chip-pill" data-t="trust_3"></li>
-      <li class="lg lg-chip-pill" data-t="trust_4"></li>
-      <li class="lg lg-chip-pill" data-t="trust_5"></li>
+      <li class="lg lg-chip-pill" data-t="trust_1">Arabic and English</li>
+      <li class="lg lg-chip-pill" data-t="trust_2">Windows and Android POS</li>
+      <li class="lg lg-chip-pill" data-t="trust_3">mada, Visa and Mastercard</li>
+      <li class="lg lg-chip-pill" data-t="trust_4">Keeps selling offline</li>
+      <li class="lg lg-chip-pill" data-t="trust_5">VAT sales reports</li>
     </ul>
   </div>
 </section>
 
 <section class="sec light" id="workspace">
   <div class="wrap">
-    <h2 data-t="galleryTitle"></h2>
-    <p class="intro" data-t="galleryIntro"></p>
+    <h2 data-t="galleryTitle">Explore the Ceevora workspace</h2>
+    <p class="intro" data-t="galleryIntro">See what cashiers, store managers and finance teams use each day. Select a screenshot to zoom in.</p>
     <div class="tabs" role="tablist" id="galTabs"></div>
     <figure class="gallery">
-      <button class="zoom" id="galImgBtn" type="button"><img id="galImg" src="assets/cevora-terminal.webp" alt="POS checkout" width="1672" height="817"></button>
+      <button class="zoom" id="galImgBtn" type="button"><img id="galImg" loading="lazy" src="assets/cevora-terminal.webp" alt="POS checkout" width="1672" height="817"></button>
       <figcaption id="galCap"></figcaption>
       <div class="gal-nav">
         <button class="round" id="galPrev" type="button" data-t-label="previous" aria-label="Previous">&#8249;</button>
@@ -78,13 +79,13 @@
 
 <section class="sec" id="types">
   <div class="wrap">
-    <h2 data-t="types_title"></h2>
-    <p class="intro" data-t="types_intro"></p>
+    <h2 data-t="types_title">Built for your kind of shop</h2>
+    <p class="intro" data-t="types_intro">Pick your business to see the screens your team would use most.</p>
     <div class="seg lg lg-bar" role="tablist" id="typeTabs">
-      <button role="tab" data-type="cafe" data-t="type_cafe" aria-selected="true"></button>
-      <button role="tab" data-type="bakery" data-t="type_bakery" aria-selected="false"></button>
-      <button role="tab" data-type="restaurant" data-t="type_restaurant" aria-selected="false"></button>
-      <button role="tab" data-type="retail" data-t="type_retail" aria-selected="false"></button>
+      <button role="tab" data-type="cafe" data-t="type_cafe" aria-selected="true">Cafés</button>
+      <button role="tab" data-type="bakery" data-t="type_bakery" aria-selected="false">Bakeries and donut shops</button>
+      <button role="tab" data-type="restaurant" data-t="type_restaurant" aria-selected="false">Restaurants</button>
+      <button role="tab" data-type="retail" data-t="type_retail" aria-selected="false">Specialty retail</button>
     </div>
     <div class="type-panel" role="tabpanel">
       <ul class="checks" id="typeList"></ul>
@@ -95,8 +96,8 @@
 
 <section class="sec light" id="modules">
   <div class="wrap">
-    <h2 data-t="featuresTitle"></h2>
-    <p class="intro" data-t="featuresIntro"></p>
+    <h2 data-t="featuresTitle">Run the counter and back office</h2>
+    <p class="intro" data-t="featuresIntro">Take payments, close shifts, update menus, and track sales from one system.</p>
     <div class="grid" id="modGrid"></div>
   </div>
 </section>
@@ -105,9 +106,9 @@
   <div class="blobs" aria-hidden="true"><i></i><i></i></div>
   <div class="wrap video-grid">
     <div>
-      <h2 data-t="video_title"></h2>
-      <p class="intro" data-t="video_intro"></p>
-      <p class="soon" id="videoSoon" data-t="video_soon"></p>
+      <h2 data-t="video_title">See a full sale in 90 seconds</h2>
+      <p class="intro" data-t="video_intro">Watch a cashier ring up a sale, take a mada payment, close a shift, and the owner check the day's numbers.</p>
+      <p class="soon" id="videoSoon" data-t="video_soon">Video tour coming soon. Book a live demo in the meantime.</p>
     </div>
     <button class="video-card lg lg-pane" id="videoBtn" type="button" aria-label="Play video">
       <img src="assets/cevora-terminal.webp" alt="" loading="lazy" width="1672" height="817">
@@ -119,21 +120,21 @@
 <section class="sec">
   <div class="wrap two">
     <div>
-      <h2 data-t="offlineTitle"></h2>
-      <p class="intro" data-t="offlineBody"></p>
+      <h2 data-t="offlineTitle">Keep selling when offline</h2>
+      <p class="intro" data-t="offlineBody">When internet connectivity is unavailable, Ceevora POS saves supported checkout transactions locally on the POS device. When connectivity returns, Ceevora automatically syncs the saved transactions to the cloud database.</p>
       <ol class="flow">
-        <li data-t="offlineRecord"></li>
-        <li data-t="offlineRestore"></li>
-        <li data-t="offlineSync"></li>
+        <li data-t="offlineRecord">Record the sale on the POS device</li>
+        <li data-t="offlineRestore">Restore internet connectivity</li>
+        <li data-t="offlineSync">Sync saved sales to the cloud database</li>
       </ol>
-      <p class="fine" data-t="offlinePayments"></p>
+      <p class="fine" data-t="offlinePayments">Electronic payment availability during an outage depends on your payment provider and terminal setup.</p>
     </div>
     <div>
-      <h2 data-t="hw_title"></h2>
-      <p class="intro" data-t="hw_intro"></p>
+      <h2 data-t="hw_title">Works with the hardware you have</h2>
+      <p class="intro" data-t="hw_intro">Run Ceevora on Windows or Android POS devices. Share your device models and we confirm compatibility before you buy anything.</p>
       <ul class="pills">
-        <li data-t="hw_1"></li><li data-t="hw_2"></li><li data-t="hw_3"></li><li data-t="hw_4"></li>
-        <li data-t="hw_5"></li><li data-t="hw_6"></li><li data-t="hw_7"></li>
+        <li data-t="hw_1">Payment terminals</li><li data-t="hw_2">Receipt printers</li><li data-t="hw_3">Cash drawers</li><li data-t="hw_4">Barcode scanners</li>
+        <li data-t="hw_5">Scales</li><li data-t="hw_6">Delivery providers</li><li data-t="hw_7">External ERP</li>
       </ul>
     </div>
   </div>
@@ -144,29 +145,29 @@
   <div class="wrap">
     <div class="zatca lg lg-pane">
       <div>
-        <h2 data-t="zatca_title"></h2>
-        <p data-t="zatca_body"></p>
+        <h2 data-t="zatca_title">Ready to plan for ZATCA e-invoicing</h2>
+        <p data-t="zatca_body">Sales reports include VAT, and receipts trace back to daily journal vouchers. Share your ZATCA requirements with us and we will confirm the supported configuration and onboarding scope for your business.</p>
       </div>
-      <a class="btn btn-solid" href="#contact" data-t="zatca_cta" data-note="ZATCA e-invoicing"></a>
+      <a class="btn btn-solid" href="#contact" data-t="zatca_cta" data-note="ZATCA e-invoicing">Ask about e-invoicing</a>
     </div>
   </div>
 </section>
 
 <section class="sec light">
   <div class="wrap">
-    <h2 data-t="steps_title"></h2>
+    <h2 data-t="steps_title">How getting started works</h2>
     <ol class="steps">
-      <li><b data-t="step_1"></b><span data-t="step_1_body"></span></li>
-      <li><b data-t="step_2"></b><span data-t="step_2_body"></span></li>
-      <li><b data-t="step_3"></b><span data-t="step_3_body"></span></li>
-      <li><b data-t="step_4"></b><span data-t="step_4_body"></span></li>
+      <li><b data-t="step_1">Tell us your shops and registers</b><span data-t="step_1_body">A short form, about two minutes.</span></li>
+      <li><b data-t="step_2">See a live walkthrough</b><span data-t="step_2_body">A sale, shift close, stock transfer and daily journal voucher on your kind of shop.</span></li>
+      <li><b data-t="step_3">Set up stores and menus</b><span data-t="step_3_body">Branches, terminals, products, prices and staff roles.</span></li>
+      <li><b data-t="step_4">Start selling</b><span data-t="step_4_body">Your team rings up sales; you watch every shop from the management console.</span></li>
     </ol>
   </div>
 </section>
 
 <section class="sec" id="faq">
   <div class="wrap narrow">
-    <h2 data-t="faqTitle"></h2>
+    <h2 data-t="faqTitle">Questions owners ask</h2>
     <div id="faqList"></div>
   </div>
 </section>
@@ -175,49 +176,55 @@
   <div class="blobs" aria-hidden="true"><i></i><i></i><i></i></div>
   <div class="wrap two">
     <div>
-      <p class="badge" data-t="ready"></p>
-      <h2 data-t="ctaTitle"></h2>
-      <p class="intro" data-t="ctaBody"></p>
-      <p class="intro" data-t="support"></p>
+      <p class="badge" data-t="ready">Ready to get started?</p>
+      <h2 data-t="ctaTitle">See Ceevora POS in action</h2>
+      <p class="intro" data-t="ctaBody">Tell us how many shops and registers you operate. We can walk through a sale, shift close, stock transfer and daily journal voucher.</p>
+      <p class="intro" data-t="support">English and Arabic support · Windows and Android POS</p>
       <p class="intro"><a href="mailto:info@ceevora.com">info@ceevora.com</a></p>
     </div>
     <form class="form lg lg-pane" id="demoForm" novalidate>
-      <h3 data-t="contactTitle"></h3>
-      <label><span data-t="field_company"></span><input name="company" required autocomplete="organization"></label>
-      <label><span data-t="field_name"></span><input name="name" required autocomplete="name"></label>
-      <label><span data-t="field_email"></span><input name="email" type="email" required autocomplete="email"></label>
-      <label><span data-t="field_phone"></span>
-        <span class="phone"><input name="dial" value="+966" aria-label="Country calling code" autocomplete="tel-country-code"><input name="phone" type="tel" required autocomplete="tel-national" placeholder="50 123 4567"></span>
+      <h3 data-t="contactTitle">Request a Ceevora POS demo</h3>
+      <label><span data-t="field_company">Company name</span><input name="company" required autocomplete="organization"></label>
+      <label><span data-t="field_name">Contact name</span><input name="name" required autocomplete="name"></label>
+      <label><span data-t="field_email">Email</span><input name="email" type="email" required autocomplete="email"></label>
+      <div class="row2">
+        <label><span data-t="field_country">Country</span><select name="country" required autocomplete="country-name"></select></label>
+        <label><span data-t="field_city">City</span><select name="city" required></select></label>
+      </div>
+      <label id="otherCityRow" hidden><span data-t="enterCity">Enter your city</span><input name="otherCity" autocomplete="address-level2"></label>
+      <label><span data-t="field_phone">Contact number</span>
+        <span class="phone"><input name="dial" value="+966" readonly tabindex="-1" aria-label="Country calling code"><input name="phone" type="tel" required autocomplete="tel-national" inputmode="tel" placeholder="50 123 4567"></span>
       </label>
       <div class="row2">
-        <label><span data-t="field_country"></span><input name="country" required autocomplete="country-name" data-t-value="country_default"></label>
-        <label><span data-t="field_city"></span><input name="city" required autocomplete="address-level2"></label>
+        <label><span data-t="field_locations">Number of locations</span><input name="locations" type="number" min="1" inputmode="numeric" required></label>
+        <label><span data-t="field_terminals">Number of POS terminals</span><input name="terminals" type="number" min="1" inputmode="numeric" required></label>
       </div>
-      <div class="row2">
-        <label><span data-t="field_locations"></span><input name="locations" type="number" min="1" inputmode="numeric" required></label>
-        <label><span data-t="field_terminals"></span><input name="terminals" type="number" min="1" inputmode="numeric" required></label>
-      </div>
-      <label><span><span data-t="notes"></span> <small data-t="optional"></small></span><textarea name="notes" rows="3" data-t-ph="notesPlaceholder"></textarea></label>
+      <label><span><span data-t="notes">Modules or requirements</span> <small data-t="optional">(optional)</small></span><textarea name="notes" rows="3" data-t-ph="notesPlaceholder"></textarea></label>
+      <input type="text" name="_honey" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true">
       <p class="err" id="formErr" role="alert"></p>
-      <button class="btn btn-solid" type="submit" data-t="emailButton"></button>
-      <p class="fine" data-t="send_note"></p>
+      <button class="btn btn-solid" type="submit" id="sendBtn" data-t="emailButton">Request a demo</button>
+      <p class="fine" data-t="send_note">Your request goes straight to the Ceevora team at info@ceevora.com. We reply within one business day.</p>
     </form>
+    <div class="form lg lg-pane sent" id="sentBox" hidden role="status">
+      <svg viewBox="0 0 24 24" width="44" height="44" aria-hidden="true"><circle cx="12" cy="12" r="11" fill="#0d6b57"/><path d="M6.5 12.5l3.5 3.5 7.5-8" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <h3 data-t="sent_title">Thank you. Your demo request was sent.</h3>
+      <p data-t="sent_body">The Ceevora team will contact you soon to arrange a time.</p>
+    </div>
   </div>
 </section>
 </main>
 
 <footer class="foot">
   <div class="wrap foot-grid">
-    <div><img src="assets/mark.png" alt="Ceevora" width="120" height="40"><p data-t="footerTagline"></p></div>
-    <div><h4 data-t="product"></h4><a href="#workspace" data-t="workspace"></a><a href="#modules" data-t="modules"></a></div>
-    <div><h4 data-t="help"></h4><a href="#faq" data-t="faq"></a></div>
-    <div><h4 data-t="contactHeading"></h4><a href="#contact" data-t="contact"></a><a href="mailto:info@ceevora.com">info@ceevora.com</a></div>
+    <div><img src="assets/mark.png" alt="Ceevora" width="120" height="40"><p data-t="footerTagline">Point of sale and store operations for Saudi Arabia</p></div>
+    <div><h4 data-t="product">Product</h4><a href="#workspace" data-t="workspace">Workspace</a><a href="#modules" data-t="modules">Modules</a></div>
+    <div><h4 data-t="help">Help</h4><a href="#faq" data-t="faq">FAQ</a></div>
+    <div><h4 data-t="contactHeading">Contact</h4><a href="#contact" data-t="contact">Contact us</a><a href="mailto:info@ceevora.com">info@ceevora.com</a></div>
   </div>
-  <p class="wrap copy">© 2026 Ceevora POS. <span data-t="rights"></span></p>
+  <p class="wrap copy">© 2026 Ceevora POS. <span data-t="rights">All rights reserved.</span></p>
 </footer>
 
 <dialog id="viewer" class="viewer"><button class="round close" type="button" aria-label="Close">×</button><div id="viewerBody"></div></dialog>
 
-<script src="app.js"></script>
 </body>
 </html>

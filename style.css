@@ -234,3 +234,40 @@ details p { margin: 0 0 18px; color: var(--ink-2); }
   .seg { display: flex; flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; max-width: 100%; }
   .seg button { flex: none; }
 }
+
+/* ---------- language switch with flags ---------- */
+.lang { display: inline-flex; align-items: center; gap: 8px; min-height: 44px; }
+.lang img { width: 21px; height: 14px; border-radius: 2px; box-shadow: 0 0 0 1px rgba(13,43,45,.15); object-fit: cover; }
+/* In Arabic, English is offered as a clear pill so visitors who can't read Arabic find it fast. */
+.lang.lang-big { background: #fff; box-shadow: 0 0 0 1.5px var(--brand); font-size: 1rem; padding: 9px 16px; }
+.lang.lang-big img { width: 26px; height: 18px; }
+@media (max-width: 520px) {
+  .lang { padding: 8px 10px; }
+  .lang:not(.lang-big) span { font-size: .9rem; }
+}
+@media (max-width: 380px) { .lang:not(.lang-big) span { display: none; } }
+
+/* ---------- form selects + states ---------- */
+.form select {
+  font: inherit; color: #fff; width: 100%; padding: 11px 38px 11px 14px; border-radius: 12px; min-height: 44px;
+  border: 1px solid rgba(255,255,255,.22); background: rgba(3,22,24,.35) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M7 10l5 5 5-5' fill='none' stroke='%23c9e3dc' stroke-width='2' stroke-linecap='round'/%3E%3C/svg%3E") no-repeat right 12px center / 18px;
+  appearance: none; -webkit-appearance: none;
+}
+[dir="rtl"] .form select { padding: 11px 14px 11px 38px; background-position: left 12px center; }
+.form select:focus { outline: 2px solid var(--mint); outline-offset: 1px; }
+.form select option { color: #0d2b2d; background: #fff; }
+.form input[readonly] { color: #c9e3dc; background: rgba(3,22,24,.55); cursor: default; text-align: center; }
+.form input, .form select, .form textarea { font-size: max(16px, 1rem); } /* 16px stops iOS zooming into fields */
+.hp { position: absolute !important; left: -9999px; width: 1px; height: 1px; opacity: 0; }
+.sent { text-align: center; justify-items: center; align-content: center; min-height: 320px; }
+.sent p { color: #c9e3dc; margin: 0; }
+.btn:disabled { opacity: .7; cursor: progress; }
+
+/* ---------- device tuning ---------- */
+@media (max-width: 520px) {
+  :root { --lg-blur: 12px; --lg-blur-bar: 10px; } /* cheaper blur on phones */
+  .blobs i { filter: blur(40px); }
+  .hero h1 { font-size: clamp(2.2rem, 10vw, 3rem); }
+}
+.foot { padding-bottom: max(28px, env(safe-area-inset-bottom)); }
+@media (hover: none) { .video-card:hover .play { transform: none; } }

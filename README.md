@@ -8,6 +8,14 @@ Static marketing site for Ceevora POS (point of sale for Saudi Arabia). One page
 - `strings.js` – every English and Arabic string
 - `assets/` – product screenshots (WebP) and logo
 
+## Demo form email
+The form sends requests to info@ceevora.com through FormSubmit (formsubmit.co). The very first submission sends an activation email to that inbox; click "Activate Form" once and every request after that arrives as a normal email. If sending fails, the visitor's email app opens with the details instead. The address is set in `EMAIL` in `app.js`.
+
+Countries, cities and dialling codes are in `COUNTRIES` in `app.js`.
+
+## Editing text
+All English and Arabic text is in `strings.js`. After changing it, run `python build.py` so the English text is baked into `index.html` (faster first paint and better for Google).
+
 ## Adding the marketing video
 Upload it to YouTube, then put its ID in the first line of `app.js`:
 

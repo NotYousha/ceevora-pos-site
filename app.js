@@ -58,7 +58,13 @@ function render() {
   document.querySelectorAll("[data-t-value]").forEach((el) => {
     if (!el.value || Object.values(STR).some((d) => d[el.dataset.tValue] === el.value)) el.value = t(el.dataset.tValue);
   });
-  $("#langBtn").lang = lang === "ar" ? "en" : "ar";
+  // The button offers the other language: English with the Canadian flag, Arabic with the Saudi flag.
+  const other = lang === "ar" ? "en" : "ar";
+  $("#langBtn").lang = other;
+  $("#langBtn").classList.toggle("lang-big", lang === "ar");
+  $("#langFlag").src = `assets/flags/${other === "en" ? "ca" : "sa"}.svg`;
+  $("#langLabel").textContent = STR[other].lang_full;
+  fillCountries();
   showGal(gal);
   showType(type);
 }
@@ -94,25 +100,93 @@ document.querySelectorAll("[data-note]").forEach((a) => a.addEventListener("clic
   if (!n.value.includes(a.dataset.note)) n.value = (n.value ? n.value + "\n" : "") + a.dataset.note;
 }));
 
-// Demo form -> email draft (same behaviour as the existing site's contact page).
-$("#demoForm").onsubmit = (e) => {
+// Demo form: countries drive the city list and the dialling code.
+const EMAIL = "info@ceevora.com";
+const C = (en, ar, dial, eg, cities) => ({ en, ar, dial, eg, cities: cities.map(([e, a]) => ({ en: e, ar: a })) });
+const COUNTRIES = {
+  SA: C("Saudi Arabia", "المملكة العربية السعودية", "+966", "50 123 4567", [["Riyadh","الرياض"],["Jeddah","جدة"],["Makkah","مكة المكرمة"],["Madinah","المدينة المنورة"],["Dammam","الدمام"],["Khobar","الخبر"],["Dhahran","الظهران"],["Al Ahsa","الأحساء"],["Jubail","الجبيل"],["Taif","الطائف"],["Tabuk","تبوك"],["Abha","أبها"],["Khamis Mushait","خميس مشيط"],["Buraidah","بريدة"],["Hail","حائل"],["Jazan","جازان"],["Najran","نجران"],["Yanbu","ينبع"]]),
+  AE: C("United Arab Emirates", "الإمارات العربية المتحدة", "+971", "50 123 4567", [["Dubai","دبي"],["Abu Dhabi","أبوظبي"],["Sharjah","الشارقة"],["Ajman","عجمان"],["Ras Al Khaimah","رأس الخيمة"],["Fujairah","الفجيرة"],["Umm Al Quwain","أم القيوين"],["Al Ain","العين"]]),
+  QA: C("Qatar", "قطر", "+974", "3312 3456", [["Doha","الدوحة"],["Lusail","لوسيل"],["Al Rayyan","الريان"],["Al Wakrah","الوكرة"],["Al Khor","الخور"],["Umm Salal","أم صلال"]]),
+  KW: C("Kuwait", "الكويت", "+965", "5001 2345", [["Kuwait City","مدينة الكويت"],["Hawalli","حولي"],["Salmiya","السالمية"],["Farwaniya","الفروانية"],["Jahra","الجهراء"],["Ahmadi","الأحمدي"],["Mubarak Al-Kabeer","مبارك الكبير"]]),
+  BH: C("Bahrain", "البحرين", "+973", "3600 1234", [["Manama","المنامة"],["Muharraq","المحرق"],["Riffa","الرفاع"],["Hamad Town","مدينة حمد"],["Isa Town","مدينة عيسى"]]),
+  OM: C("Oman", "عُمان", "+968", "9212 3456", [["Muscat","مسقط"],["Salalah","صلالة"],["Sohar","صحار"],["Nizwa","نزوى"],["Sur","صور"]]),
+  JO: C("Jordan", "الأردن", "+962", "7 9012 3456", [["Amman","عمّان"],["Irbid","إربد"],["Zarqa","الزرقاء"],["Aqaba","العقبة"]]),
+  EG: C("Egypt", "مصر", "+20", "100 123 4567", [["Cairo","القاهرة"],["Giza","الجيزة"],["Alexandria","الإسكندرية"]]),
+  CA: C("Canada", "كندا", "+1", "416 555 0123", [["Toronto","تورونتو"],["Montreal","مونتريال"],["Vancouver","فانكوفر"],["Calgary","كالغاري"],["Edmonton","إدمونتون"],["Ottawa","أوتاوا"],["Mississauga","ميسيساغا"],["Winnipeg","وينيبيغ"],["Hamilton","هاميلتون"],["London","لندن"],["Halifax","هاليفاكس"],["Quebec City","مدينة كيبك"],["St. John's","سانت جونز"]]),
+};
+const form = $("#demoForm");
+const OTHER = "__other";
+
+function fillCountries() {
+  const cur = form.country.value || "SA";
+  form.country.innerHTML = Object.entries(COUNTRIES).map(([k, c]) => `<option value="${k}">${c[lang]}</option>`).join("");
+  form.country.value = cur;
+  fillCities();
+}
+function fillCities() {
+  const c = COUNTRIES[form.country.value];
+  const cur = form.city.value;
+  form.city.innerHTML = `<option value="" disabled selected>${t("selectCity")}</option>` +
+    c.cities.map((x, i) => `<option value="${i}">${x[lang]}</option>`).join("") +
+    `<option value="${OTHER}">${t("otherCity")}</option>`;
+  if ([...form.city.options].some((o) => o.value === cur && cur)) form.city.value = cur;
+  form.dial.value = c.dial;
+  form.phone.placeholder = c.eg;
+  toggleOther();
+}
+function toggleOther() {
+  const other = form.city.value === OTHER;
+  $("#otherCityRow").hidden = !other;
+  form.otherCity.required = other;
+}
+form.country.onchange = () => { form.city.value = ""; fillCities(); };
+form.city.onchange = toggleOther;
+
+function emailBody() {
+  const v = (n) => form[n].value.trim();
+  const c = COUNTRIES[v("country")];
+  const city = v("city") === OTHER ? v("otherCity") : c.cities[+v("city")]?.en || "";
+  return {
+    Company: v("company"), Name: v("name"), Email: v("email"),
+    Phone: `${v("dial")} ${v("phone")}`, Country: c.en, City: city,
+    Locations: v("locations"), "POS terminals": v("terminals"),
+    Requirements: v("notes") || "-", "Site language": lang === "ar" ? "Arabic" : "English",
+  };
+}
+
+form.onsubmit = async (e) => {
   e.preventDefault();
-  const f = e.target;
-  const bad = [...f.elements].find((el) => el.willValidate && !el.checkValidity());
-  if (bad) { $("#formErr").textContent = `${bad.closest("label").querySelector("span").textContent}?`; bad.focus(); return; }
+  const bad = [...form.elements].find((el) => el.willValidate && !el.checkValidity());
+  if (bad) {
+    $("#formErr").textContent = `${t("required")}: ${bad.closest("label").querySelector("span").textContent}`;
+    bad.focus();
+    return;
+  }
   $("#formErr").textContent = "";
-  const v = (n) => f[n].value.trim();
-  const body = [t("emailGreeting"), "", t("emailBody"), "",
-    `${t("field_company")}: ${v("company")}`,
-    `${t("field_name")}: ${v("name")}`,
-    `${t("field_email")}: ${v("email")}`,
-    `${t("field_phone")}: ${v("dial")} ${v("phone")}`,
-    `${t("field_country")}: ${v("country")}`,
-    `${t("field_city")}: ${v("city")}`,
-    `${t("field_locations")}: ${v("locations")}`,
-    `${t("field_terminals")}: ${v("terminals")}`,
-    v("notes") ? `${t("notes")}: ${v("notes")}` : null].filter((x) => x !== null).join("\n");
-  location.href = `mailto:info@ceevora.com?subject=${encodeURIComponent(t("emailSubject"))}&body=${encodeURIComponent(body)}`;
+  if (form._honey.value) return; // bot
+  const data = emailBody();
+  const btn = $("#sendBtn");
+  btn.disabled = true;
+  btn.textContent = t("sending");
+  try {
+    // FormSubmit forwards the request to EMAIL. The first ever submission sends an activation link to that inbox.
+    const r = await fetch(`https://formsubmit.co/ajax/${EMAIL}`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json", Accept: "application/json" },
+      body: JSON.stringify({ ...data, _subject: `Ceevora POS demo request: ${data.Company}`, _replyto: data.Email, _template: "table", _captcha: "false" }),
+    });
+    const j = await r.json().catch(() => ({}));
+    if (!r.ok || String(j.success) !== "true") throw new Error(j.message || r.status);
+    form.hidden = true;
+    $("#sentBox").hidden = false;
+  } catch {
+    $("#formErr").textContent = t("send_failed");
+    const body = Object.entries(data).map(([k, v]) => `${k}: ${v}`).join("\n");
+    location.href = `mailto:${EMAIL}?subject=${encodeURIComponent(STR.en.emailSubject)}&body=${encodeURIComponent(body)}`;
+  } finally {
+    btn.disabled = false;
+    btn.textContent = t("emailButton");
+  }
 };
 
 render();
