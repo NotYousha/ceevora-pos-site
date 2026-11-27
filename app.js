@@ -16,14 +16,22 @@ const MODULES = ["payments", "shifts", "catalog", "inventory", "kitchen", "custo
 const TYPE_IMG = { cafe: "terminal", bakery: "stock", restaurant: "transaction_history", retail: "products" };
 const FAQ = { setup: 3, operations: 4, permissions: 3, reporting: 3 };
 const img = (k) => `assets/cevora-${k}.webp`;
+const srcset = (k) => `assets/cevora-${k}-960.webp 960w, ${img(k)} 1672w`;
+function swapImg(el, k) {
+  if (el.dataset.k === k) return;
+  el.dataset.k = k;
+  el.classList.remove("swap"); void el.offsetWidth; el.classList.add("swap"); // restart the fade
+  el.srcset = srcset(k); el.src = img(k);
+}
 
+const reduceMotion = matchMedia("(prefers-reduced-motion: reduce)").matches;
 let lang = "en";
 try { if (localStorage.getItem("lang") === "ar") lang = "ar"; } catch {}
 const t = (k) => STR[lang][k] ?? STR.en[k] ?? "";
 
 // Build repeated content once; text is filled by render().
 $("#modGrid").innerHTML = MODULES.map((m) =>
-  `<article class="card"><h3 data-t="module_${m}_title"></h3><p data-t="module_${m}_description"></p></article>`).join("");
+  `<article class="mod"><h3 data-t="module_${m}_title"></h3><p data-t="module_${m}_description"></p></article>`).join("");
 $("#faqList").innerHTML = Object.entries(FAQ).map(([g, n]) =>
   `<h3 class="faq-group" data-t="faq_${g}_title"></h3>` +
   Array.from({ length: n }, (_, i) =>
@@ -35,7 +43,7 @@ let gal = 0, type = "cafe";
 function showGal(i) {
   gal = (i + SHOTS.length) % SHOTS.length;
   const [k, title, desc] = SHOTS[gal];
-  $("#galImg").src = img(k);
+  swapImg($("#galImg"), k);
   $("#galImg").alt = t(title);
   $("#galCap").textContent = desc ? `${t(title)}: ${t(desc)}` : t(title);
   document.querySelectorAll("#galTabs button").forEach((b, j) => b.setAttribute("aria-selected", j === gal));
@@ -43,10 +51,24 @@ function showGal(i) {
 function showType(k) {
   type = k;
   document.querySelectorAll("#typeTabs button").forEach((b) => b.setAttribute("aria-selected", b.dataset.type === k));
+  moveLens();
   $("#typeList").innerHTML = [1, 2, 3].map((n) => `<li>${t(`type_${k}_${n}`)}</li>`).join("");
-  $("#typeImg").src = img(TYPE_IMG[k]);
+  swapImg($("#typeImg"), TYPE_IMG[k]);
   $("#typeImg").alt = t(`type_${k}`);
 }
+
+// The white lens glides under the selected business type (physical offsets, so RTL just works).
+function moveLens() {
+  const b = $(`#typeTabs [data-type="${type}"]`), seg = $("#typeTabs"), lens = $("#segLens");
+  if (!b || !b.offsetWidth) return;
+  lens.style.width = `${b.offsetWidth}px`;
+  lens.style.height = `${b.offsetHeight}px`;
+  lens.style.transform = `translate(${b.offsetLeft}px, ${b.offsetTop}px)`;
+  // keep the chosen tab in view when the row scrolls sideways on phones
+  const left = b.offsetLeft - (seg.clientWidth - b.offsetWidth) / 2;
+  seg.scrollTo({ left, behavior: reduceMotion ? "auto" : "smooth" });
+}
+addEventListener("resize", moveLens);
 
 function render() {
   document.documentElement.lang = lang;
@@ -72,19 +94,44 @@ function render() {
 $("#langBtn").onclick = () => {
   lang = lang === "ar" ? "en" : "ar";
   try { localStorage.setItem("lang", lang); } catch {}
-  render();
+  // Cross-fade the whole page between languages where the browser supports it.
+  if (document.startViewTransition && !reduceMotion) document.startViewTransition(render); else render();
 };
 $("#galTabs").onclick = (e) => { const b = e.target.closest("button"); if (b) showGal(+b.dataset.i); };
 $("#galPrev").onclick = () => showGal(gal + (lang === "ar" ? 1 : -1));
 $("#galNext").onclick = () => showGal(gal + (lang === "ar" ? -1 : 1));
-$("#typeTabs").onclick = (e) => { const b = e.target.closest("button"); if (b) showType(b.dataset.type); };
+let typeTour = null;
+const stopTour = () => { clearInterval(typeTour); typeTour = null; };
+$("#typeTabs").onclick = (e) => { const b = e.target.closest("button"); if (b) { stopTour(); showType(b.dataset.type); } };
+// Arrow keys move between types (reversed in Arabic).
+$("#typeTabs").onkeydown = (e) => {
+  const order = [...document.querySelectorAll("#typeTabs button")].map((b) => b.dataset.type);
+  const step = { ArrowRight: 1, ArrowLeft: -1 }[e.key];
+  if (!step) return;
+  stopTour();
+  const next = order[(order.indexOf(type) + step * (lang === "ar" ? -1 : 1) + order.length) % order.length];
+  showType(next);
+  $(`#typeTabs [data-type="${next}"]`).focus();
+};
+// First time the section scrolls into view, glide through every type once so visitors see they are buttons.
+if (!reduceMotion && "IntersectionObserver" in window) {
+  const order = ["cafe", "bakery", "restaurant", "retail", "cafe"];
+  const seen = new IntersectionObserver(([e]) => {
+    if (!e.isIntersecting) return;
+    seen.disconnect();
+    let i = 0;
+    typeTour = setInterval(() => { if (++i >= order.length) return stopTour(); showType(order[i]); }, 1300);
+  }, { threshold: 0.6 });
+  seen.observe($("#typeTabs"));
+  ["pointerdown", "keydown", "wheel", "touchstart"].forEach((ev) => $("#types").addEventListener(ev, stopTour, { passive: true }));
+}
 
 // Viewer dialog: zoomed screenshot or the video.
 const viewer = $("#viewer");
 const openViewer = (html) => { $("#viewerBody").innerHTML = html; viewer.showModal(); };
 viewer.addEventListener("close", () => { $("#viewerBody").innerHTML = ""; });
 viewer.onclick = (e) => { if (e.target === viewer || e.target.closest(".close")) viewer.close(); };
-$("#galImgBtn").onclick = () => openViewer(`<img src="${$("#galImg").src}" alt="${$("#galImg").alt}">`);
+$("#galImgBtn").onclick = () => openViewer(`<img src="${img($("#galImg").dataset.k)}" alt="${$("#galImg").alt}">`);
 
 if (YOUTUBE_ID) {
   $("#videoSoon").hidden = true;
@@ -190,3 +237,72 @@ form.onsubmit = async (e) => {
 };
 
 render();
+
+// ---------- motion (transform/opacity only; all of it skipped for reduced motion) ----------
+document.documentElement.classList.add("js");
+if (!reduceMotion && "IntersectionObserver" in window) {
+  // Reveal blocks as they scroll in; cards inside grids stagger.
+  document.querySelectorAll(".steps li").forEach((el, i) => {
+    el.setAttribute("data-r", ""); el.style.setProperty("--d", `${(i % 4) * 70}ms`);
+  });
+  const io = new IntersectionObserver((es) => es.forEach((e) => {
+    if (e.isIntersecting) { e.target.classList.add("in"); io.unobserve(e.target); }
+  }), { rootMargin: "0px 0px -8% 0px", threshold: 0.08 });
+  document.querySelectorAll("[data-r]").forEach((el) => io.observe(el));
+
+  // Specular highlight follows the pointer on glass controls (written per element, never on :root).
+  document.querySelectorAll(".lg-btn, .video-card, .zatca, .form, .hero-shot").forEach((el) => {
+    el.classList.add("spec");
+    el.addEventListener("pointermove", (e) => {
+      const r = el.getBoundingClientRect();
+      el.style.setProperty("--mx", `${e.clientX - r.left}px`);
+      el.style.setProperty("--my", `${e.clientY - r.top}px`);
+    }, { passive: true });
+  });
+
+  // Hero screenshot tilts flat as you scroll past it.
+  const shot = $(".hero-shot");
+  let ticking = false;
+  const onScroll = () => {
+    if (ticking) return; ticking = true;
+    requestAnimationFrame(() => {
+      const y = scrollY;
+      shot.style.setProperty("--tilt", `${Math.max(0, 10 - y / 30)}deg`);
+      ticking = false;
+    });
+  };
+  addEventListener("scroll", onScroll, { passive: true }); onScroll();
+} else {
+  document.querySelectorAll("[data-r]").forEach((el) => el.classList.add("in"));
+}
+
+// Nav firms up after scrolling; reading-progress bar; mobile CTA hides over the form.
+{
+  const nav = $(".nav"), bar = $("#progress"), mcta = $("#mcta"), contact = $("#contact");
+  let raf = 0;
+  const update = () => {
+    raf = 0;
+    const max = document.documentElement.scrollHeight - innerHeight;
+    nav.classList.toggle("scrolled", scrollY > 24);
+    bar.style.transform = `scaleX(${max > 0 ? scrollY / max : 0})`;
+    const c = contact.getBoundingClientRect();
+    mcta.classList.toggle("show", scrollY > innerHeight * 0.6 && !(c.top < innerHeight && c.bottom > 0));
+  };
+  addEventListener("scroll", () => { if (!raf) raf = requestAnimationFrame(update); }, { passive: true });
+  update();
+}
+
+// Mobile menu
+{
+  const btn = $("#burger"), menu = $("#mnav");
+  const set = (open) => {
+    btn.setAttribute("aria-expanded", open);
+    btn.setAttribute("aria-label", t(open ? "closeNavigation" : "openNavigation"));
+    menu.hidden = !open;
+    document.body.classList.toggle("menu-open", open);
+  };
+  btn.onclick = () => set(menu.hidden);
+  menu.onclick = (e) => { if (e.target.closest("a")) set(false); };
+  addEventListener("keydown", (e) => { if (e.key === "Escape" && !menu.hidden) { set(false); btn.focus(); } });
+  matchMedia("(min-width: 861px)").addEventListener("change", (m) => m.matches && set(false));
+}

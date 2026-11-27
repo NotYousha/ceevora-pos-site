@@ -7,12 +7,19 @@
 <meta name="description" content="Point of sale for Saudi cafés, bakeries, restaurants and retailers. Checkout, inventory, reporting and accounting across your shops, in Arabic and English.">
 <meta property="og:title" content="Ceevora POS | Point of Sale for Saudi Arabia">
 <meta property="og:description" content="Run the counter. See the whole business.">
-<meta property="og:image" content="assets/cevora-dashboard.webp">
+<meta property="og:image" content="https://notyousha.github.io/ceevora-pos-site/assets/og.jpg">
+<meta property="og:image:width" content="1200"><meta property="og:image:height" content="630">
+<meta property="og:type" content="website"><meta property="og:url" content="https://notyousha.github.io/ceevora-pos-site/">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="theme-color" content="#0b2629">
+<link rel="canonical" href="https://notyousha.github.io/ceevora-pos-site/">
+<link rel="preload" as="image" href="assets/cevora-dashboard.webp" imagesrcset="assets/cevora-dashboard-960.webp 960w, assets/cevora-dashboard.webp 1896w" imagesizes="(max-width: 1212px) 100vw, 1180px" fetchpriority="high">
 <link rel="icon" href="assets/mark.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css">
+<script type="application/ld+json">[{"@context": "https://schema.org", "@type": "SoftwareApplication", "name": "Ceevora POS", "applicationCategory": "BusinessApplication", "operatingSystem": "Windows, Android", "description": "Connect checkout, inventory, reporting and accounting across your shops. Built for cafés, donut shops, bakeries, restaurants and specialty retailers.", "url": "https://notyousha.github.io/ceevora-pos-site/", "image": "https://notyousha.github.io/ceevora-pos-site/assets/og.jpg", "inLanguage": ["en", "ar"], "publisher": {"@type": "Organization", "name": "Ceevora", "email": "info@ceevora.com", "logo": "https://notyousha.github.io/ceevora-pos-site/assets/mark.png"}}, {"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "What hardware can we use?", "acceptedAnswer": {"@type": "Answer", "text": "Discuss Windows or Android POS devices with Ceevora. Share your payment terminal, printer, cash drawer or scanner models to confirm compatibility."}}, {"@type": "Question", "name": "Does checkout work offline?", "acceptedAnswer": {"@type": "Answer", "text": "A configured till can record core counter sales locally and sync them when the connection returns. Online refunds, reports, and provider integrations require connectivity."}}, {"@type": "Question", "name": "Does Ceevora POS support Arabic?", "acceptedAnswer": {"@type": "Answer", "text": "Yes. Ceevora POS supports Arabic and English interfaces, including a right-to-left interface and bilingual catalog names."}}, {"@type": "Question", "name": "Can each branch have its own menu?", "acceptedAnswer": {"@type": "Answer", "text": "Yes. Configure menus by shop, track stock by location and compare sales across locations in the management console."}}, {"@type": "Question", "name": "Can I manage more than one shop?", "acceptedAnswer": {"@type": "Answer", "text": "Yes. Organize tills under stores and branches, scope staff access by location, and use branch and store filters in sales reporting."}}, {"@type": "Question", "name": "Can I handle orders for business customers?", "acceptedAnswer": {"@type": "Answer", "text": "The back-office workflow supports customer prices, credit terms, standing orders, and production lists by kitchen."}}, {"@type": "Question", "name": "Can I receive delivery app orders?", "acceptedAnswer": {"@type": "Answer", "text": "The delivery inbox supports enabled providers. Provider activation, store configuration, and POS product mapping are required."}}, {"@type": "Question", "name": "Can I give staff different permissions?", "acceptedAnswer": {"@type": "Answer", "text": "Yes. Staff and administrators can be given role-based permissions and access to assigned locations."}}, {"@type": "Question", "name": "How are refunds and voids approved?", "acceptedAnswer": {"@type": "Answer", "text": "Cashiers can look up a sale and request manager approval. These reversals require an online connection."}}, {"@type": "Question", "name": "How do we plan for Saudi e-invoicing?", "acceptedAnswer": {"@type": "Answer", "text": "Share your ZATCA requirements with Ceevora to confirm the supported configuration and onboarding scope for your business."}}, {"@type": "Question", "name": "Can sales use up recipe ingredients?", "acceptedAnswer": {"@type": "Answer", "text": "Yes. When Inventory is enabled and a product has a recipe, checkout can deduct its ingredient quantities using the configured units."}}, {"@type": "Question", "name": "Can I track expiry dates and stock counts?", "acceptedAnswer": {"@type": "Answer", "text": "Yes. Inventory includes batch and expiry tracking, physical counts, and variance review."}}, {"@type": "Question", "name": "Which reports can I export?", "acceptedAnswer": {"@type": "Answer", "text": "Standard sales reports include daily sales, categories, promotions, and VAT, with CSV or Excel export. Sales Summary has a PDF download."}}]}]</script>
 <script defer src="strings.js"></script>
 <script defer src="app.js"></script>
 </head>
@@ -29,9 +36,17 @@
   </nav>
   <div class="nav-end">
     <button class="lang lg-chip" id="langBtn" type="button" lang="ar"><img id="langFlag" src="assets/flags/sa.svg" alt="" width="21" height="14"><span id="langLabel">العربية</span></button>
-    <a class="btn btn-solid" href="#contact" data-t="nav_contact">Book a demo</a>
+    <a class="btn btn-solid nav-cta" href="#contact" data-t="nav_contact">Book a demo</a>
+    <button class="burger" id="burger" type="button" aria-expanded="false" aria-controls="mnav" data-t-label="openNavigation" aria-label="Open navigation"><span></span><span></span></button>
   </div>
 </header>
+<nav class="mnav lg" id="mnav" aria-label="Mobile" hidden>
+  <a href="#workspace" data-t="product">Product</a>
+  <a href="#types" data-t="nav_types">Who it's for</a>
+  <a href="#modules" data-t="modules">Modules</a>
+  <a href="#faq" data-t="faq">FAQ</a>
+  <a class="btn btn-solid" href="#contact" data-t="nav_contact">Book a demo</a>
+</nav>
 
 <main id="main">
 <section class="hero">
@@ -49,7 +64,7 @@
   </div>
   <div class="wrap">
     <figure class="hero-shot lg lg-pane">
-      <img src="assets/cevora-dashboard.webp" alt="Ceevora management console showing today's sales" width="1896" height="830" fetchpriority="high">
+      <img src="assets/cevora-dashboard.webp" srcset="assets/cevora-dashboard-960.webp 960w, assets/cevora-dashboard.webp 1896w" sizes="(max-width: 1212px) 100vw, 1180px" alt="Ceevora management console showing today's sales" width="1896" height="830" fetchpriority="high" decoding="async">
     </figure>
     <ul class="trust">
       <li class="lg lg-chip-pill" data-t="trust_1">Arabic and English</li>
@@ -66,12 +81,12 @@
     <h2 data-t="galleryTitle">Explore the Ceevora workspace</h2>
     <p class="intro" data-t="galleryIntro">See what cashiers, store managers and finance teams use each day. Select a screenshot to zoom in.</p>
     <div class="tabs" role="tablist" id="galTabs"></div>
-    <figure class="gallery">
-      <button class="zoom" id="galImgBtn" type="button"><img id="galImg" loading="lazy" src="assets/cevora-terminal.webp" alt="POS checkout" width="1672" height="817"></button>
+    <figure class="gallery" data-r>
+      <button class="zoom" id="galImgBtn" type="button"><img id="galImg" decoding="async" sizes="(max-width: 1212px) 100vw, 1160px" loading="lazy" src="assets/cevora-terminal.webp" alt="POS checkout" width="1672" height="817"></button>
       <figcaption id="galCap"></figcaption>
       <div class="gal-nav">
-        <button class="round" id="galPrev" type="button" data-t-label="previous" aria-label="Previous">&#8249;</button>
-        <button class="round" id="galNext" type="button" data-t-label="next" aria-label="Next">&#8250;</button>
+        <button class="round" id="galPrev" type="button" data-t-label="previous" aria-label="Previous"><svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M15 6l-6 6 6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+        <button class="round" id="galNext" type="button" data-t-label="next" aria-label="Next"><svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M9 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
       </div>
     </figure>
   </div>
@@ -82,14 +97,15 @@
     <h2 data-t="types_title">Built for your kind of shop</h2>
     <p class="intro" data-t="types_intro">Pick your business to see the screens your team would use most.</p>
     <div class="seg lg lg-bar" role="tablist" id="typeTabs">
+      <span class="seg-lens" id="segLens" aria-hidden="true"></span>
       <button role="tab" data-type="cafe" data-t="type_cafe" aria-selected="true">Cafés</button>
       <button role="tab" data-type="bakery" data-t="type_bakery" aria-selected="false">Bakeries and donut shops</button>
       <button role="tab" data-type="restaurant" data-t="type_restaurant" aria-selected="false">Restaurants</button>
       <button role="tab" data-type="retail" data-t="type_retail" aria-selected="false">Specialty retail</button>
     </div>
-    <div class="type-panel" role="tabpanel">
+    <div data-r class="type-panel" role="tabpanel">
       <ul class="checks" id="typeList"></ul>
-      <img id="typeImg" src="assets/cevora-terminal.webp" alt="" width="1672" height="817" loading="lazy">
+      <img id="typeImg" decoding="async" sizes="(max-width: 860px) 100vw, 700px" src="assets/cevora-terminal.webp" alt="" width="1672" height="817" loading="lazy">
     </div>
   </div>
 </section>
@@ -110,8 +126,8 @@
       <p class="intro" data-t="video_intro">Watch a cashier ring up a sale, take a mada payment, close a shift, and the owner check the day's numbers.</p>
       <p class="soon" id="videoSoon" data-t="video_soon">Video tour coming soon. Book a live demo in the meantime.</p>
     </div>
-    <button class="video-card lg lg-pane" id="videoBtn" type="button" aria-label="Play video">
-      <img src="assets/cevora-terminal.webp" alt="" loading="lazy" width="1672" height="817">
+    <button data-r class="video-card lg lg-pane" id="videoBtn" type="button" aria-label="Play video">
+      <img src="assets/cevora-terminal.webp" srcset="assets/cevora-terminal-960.webp 960w, assets/cevora-terminal.webp 1672w" sizes="(max-width: 860px) 100vw, 680px" alt="" loading="lazy" decoding="async" width="1672" height="817">
       <span class="play lg lg-btn" aria-hidden="true"><svg viewBox="0 0 24 24" width="28" height="28"><path d="M8 5v14l11-7z" fill="currentColor"/></svg></span>
     </button>
   </div>
@@ -143,7 +159,7 @@
 <section class="sec zatca-sec">
   <div class="blobs" aria-hidden="true"><i></i><i></i></div>
   <div class="wrap">
-    <div class="zatca lg lg-pane">
+    <div class="zatca lg lg-pane" data-r>
       <div>
         <h2 data-t="zatca_title">Ready to plan for ZATCA e-invoicing</h2>
         <p data-t="zatca_body">Sales reports include VAT, and receipts trace back to daily journal vouchers. Share your ZATCA requirements with us and we will confirm the supported configuration and onboarding scope for your business.</p>
@@ -156,7 +172,7 @@
 <section class="sec light">
   <div class="wrap">
     <h2 data-t="steps_title">How getting started works</h2>
-    <ol class="steps">
+    <ol class="steps" data-r>
       <li><b data-t="step_1">Tell us your shops and registers</b><span data-t="step_1_body">A short form, about two minutes.</span></li>
       <li><b data-t="step_2">See a live walkthrough</b><span data-t="step_2_body">A sale, shift close, stock transfer and daily journal voucher on your kind of shop.</span></li>
       <li><b data-t="step_3">Set up stores and menus</b><span data-t="step_3_body">Branches, terminals, products, prices and staff roles.</span></li>
@@ -176,13 +192,12 @@
   <div class="blobs" aria-hidden="true"><i></i><i></i><i></i></div>
   <div class="wrap two">
     <div>
-      <p class="badge" data-t="ready">Ready to get started?</p>
       <h2 data-t="ctaTitle">See Ceevora POS in action</h2>
       <p class="intro" data-t="ctaBody">Tell us how many shops and registers you operate. We can walk through a sale, shift close, stock transfer and daily journal voucher.</p>
       <p class="intro" data-t="support">English and Arabic support · Windows and Android POS</p>
       <p class="intro"><a href="mailto:info@ceevora.com">info@ceevora.com</a></p>
     </div>
-    <form class="form lg lg-pane" id="demoForm" novalidate>
+    <form data-r class="form lg lg-pane" id="demoForm" novalidate>
       <h3 data-t="contactTitle">Request a Ceevora POS demo</h3>
       <label><span data-t="field_company">Company name</span><input name="company" required autocomplete="organization"></label>
       <label><span data-t="field_name">Contact name</span><input name="name" required autocomplete="name"></label>
@@ -224,7 +239,10 @@
   <p class="wrap copy">© 2026 Ceevora POS. <span data-t="rights">All rights reserved.</span></p>
 </footer>
 
-<dialog id="viewer" class="viewer"><button class="round close" type="button" aria-label="Close">×</button><div id="viewerBody"></div></dialog>
+<a class="mcta lg" id="mcta" href="#contact"><span data-t="nav_contact">Book a demo</span></a>
+<div class="progress" id="progress" aria-hidden="true"></div>
+
+<dialog id="viewer" class="viewer"><button class="round close" type="button" aria-label="Close"><svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button><div id="viewerBody"></div></dialog>
 
 </body>
 </html>

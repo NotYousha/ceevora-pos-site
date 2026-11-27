@@ -271,3 +271,118 @@ details p { margin: 0 0 18px; color: var(--ink-2); }
 }
 .foot { padding-bottom: max(28px, env(safe-area-inset-bottom)); }
 @media (hover: none) { .video-card:hover .play { transform: none; } }
+
+/* iOS Safari ignores border-radius on backdrop-filter (worst while the button scales), so the blur leaked past
+   the pill as square corners. Clip the glass buttons to their own shape. */
+.lg-btn { clip-path: inset(0 round 999px); --lg-shadow: none; }
+.play { clip-path: circle(50%); }
+.lg-btn.btn { border: 0; }
+
+/* ---------- motion ---------- */
+@keyframes rise { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: none; } }
+@keyframes drift { 0%, 100% { transform: translate(0, 0) scale(1); } 50% { transform: translate(40px, 30px) scale(1.08); } }
+@keyframes fade { from { opacity: .25; } to { opacity: 1; } }
+@media (prefers-reduced-motion: no-preference) {
+  .hero h1 > span, .hero h1 > br + span { display: inline-block; animation: rise .8s cubic-bezier(.2,.7,.2,1) both; }
+  .hero h1 > span:last-child { animation-delay: .12s; }
+  .hero-side > * { animation: rise .8s .22s cubic-bezier(.2,.7,.2,1) both; }
+  .hero-side > .ctas { animation-delay: .32s; }
+  .hero-shot { animation: rise 1s .38s cubic-bezier(.2,.7,.2,1) both; }
+  .hero-shot img { transform: perspective(1400px) rotateX(var(--tilt, 0deg)); transform-origin: 50% 100%; will-change: transform; }
+  .blobs i { animation: drift 18s ease-in-out infinite; }
+  .blobs i:nth-child(2) { animation-duration: 23s; animation-direction: reverse; }
+  .blobs i:nth-child(3) { animation-duration: 27s; }
+  .js [data-r] { opacity: 0; transform: translateY(22px); transition: opacity .7s cubic-bezier(.2,.7,.2,1) var(--d, 0ms), transform .7s cubic-bezier(.2,.7,.2,1) var(--d, 0ms); }
+  .js [data-r].in { opacity: 1; transform: none; }
+  .swap { animation: fade .45s ease both; }
+  .card, .steps li { transition: transform .25s ease, box-shadow .25s ease, opacity .7s cubic-bezier(.2,.7,.2,1) var(--d, 0ms); }
+  .card:hover, .steps li:hover { transform: translateY(-4px); box-shadow: 0 14px 30px -18px rgba(2,20,22,.35); }
+  details p { animation: rise .35s ease both; }
+  ::view-transition-old(root), ::view-transition-new(root) { animation-duration: .35s; }
+}
+/* pointer-following specular light on glass */
+.spec::after { background: radial-gradient(220px circle at var(--mx, 50%) var(--my, 0%), rgba(255,255,255,.22), transparent 60%), linear-gradient(to bottom, var(--lg-sheen), transparent); inset: 1px; }
+@media (hover: none) { .spec::after { background: linear-gradient(to bottom, var(--lg-sheen), transparent 45%); } }
+
+/* nav firms up once content scrolls under it */
+.nav { transition: background-color .3s ease, box-shadow .3s ease; }
+.nav.scrolled { --lg-tint-bar: rgba(255,255,255,.8); }
+
+/* reading progress */
+.progress { position: fixed; top: 0; inset-inline: 0; height: 3px; background: linear-gradient(90deg, var(--brand), var(--mint)); transform: scaleX(0); transform-origin: 0 50%; z-index: 60; pointer-events: none; }
+[dir="rtl"] .progress { transform-origin: 100% 50%; }
+
+/* sticky "Book a demo" on phones (ad traffic converts here) */
+.mcta { display: none; }
+@media (max-width: 860px) {
+  .mcta { display: flex; justify-content: center; position: fixed; z-index: 55; inset-inline: 16px; bottom: max(14px, env(safe-area-inset-bottom)); padding: 14px; border-radius: 999px; text-decoration: none; font-weight: 700; color: #fff; --lg-tint: rgba(13,107,87,.82); clip-path: inset(0 round 999px); transform: translateY(140%); transition: transform .35s cubic-bezier(.2,.7,.2,1); }
+  .mcta.show { transform: none; }
+  .foot { padding-bottom: 96px; }
+}
+
+/* ---------- mobile menu ---------- */
+.burger { display: none; width: 44px; height: 44px; border: 0; border-radius: 50%; background: rgba(13,43,45,.08); cursor: pointer; position: relative; }
+.burger span { position: absolute; left: 13px; right: 13px; height: 2px; border-radius: 2px; background: var(--ink); transition: transform .25s ease; }
+.burger span:first-child { top: 17px; } .burger span:last-child { top: 25px; }
+.burger[aria-expanded="true"] span:first-child { transform: translateY(4px) rotate(45deg); }
+.burger[aria-expanded="true"] span:last-child { transform: translateY(-4px) rotate(-45deg); }
+.mnav { position: fixed; z-index: 49; top: calc(max(12px, env(safe-area-inset-top)) + 70px); inset-inline: 16px; border-radius: 26px; padding: 10px; display: grid; gap: 2px; --lg-tint: rgba(255,255,255,.94); }
+.mnav[hidden] { display: none; }
+.mnav a:not(.btn) { text-decoration: none; color: var(--ink); font-weight: 600; font-size: 1.08rem; padding: 14px 16px; border-radius: 16px; }
+.mnav a:not(.btn):active, .mnav a:not(.btn):hover { background: rgba(13,107,87,.1); }
+.mnav .btn { margin-top: 6px; }
+@media (prefers-reduced-motion: no-preference) { .mnav:not([hidden]) { animation: rise .25s cubic-bezier(.2,.7,.2,1) both; } }
+@media (max-width: 860px) {
+  .burger { display: block; }
+  .nav { padding: 6px 6px 6px 16px; gap: 8px; }
+  [dir="rtl"] .nav { padding: 6px 16px 6px 6px; }
+}
+@media (max-width: 520px) { .nav-cta { display: none; } } /* the sticky bottom CTA + menu cover it on phones */
+
+/* ---------- polish pass ---------- */
+/* modules as a ruled two-column list instead of a wall of identical cards */
+.grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 56px; }
+.mod { padding: 22px 0; border-top: 1px solid var(--line); display: grid; gap: 6px; }
+.mod h3 { margin: 0; font-size: 1.1rem; }
+.mod p { margin: 0; color: var(--ink-2); max-width: 60ch; }
+@media (max-width: 720px) { .grid { grid-template-columns: 1fr; } }
+.round { display: inline-grid; place-items: center; }
+[dir="rtl"] .round svg { transform: scaleX(-1); }
+.viewer .close { background: #fff; }
+/* browser surfaces carry the palette too */
+::selection { background: var(--mint); color: var(--deep); }
+html { accent-color: var(--brand); caret-color: var(--brand); scrollbar-color: #9fb9b2 var(--paper-2); }
+.dark, .hero { caret-color: var(--mint); }
+h1, h2 { text-wrap: balance; } p { text-wrap: pretty; }
+/* tap feedback on phones without the grey flash */
+a, button, summary { -webkit-tap-highlight-color: transparent; }
+.lead, .intro { max-width: 62ch; }
+@media (max-width: 520px) {
+  .sec { padding: 56px 0; }
+  .hero { padding: 104px 0 48px; }
+  .hero-grid { margin-bottom: 28px; }
+  .ctas .btn { flex: 1 1 auto; }
+  .trust { justify-content: flex-start; }
+  .lg-chip-pill { font-size: .86rem; padding: 7px 13px; }
+  .gallery { padding: 8px; }
+  .gallery figcaption { padding-inline-end: 100px; font-size: .92rem; }
+  .zatca .btn, .form .btn { width: 100%; }
+  .video-grid { gap: 28px; }
+}
+
+/* ---------- business-type selector: gliding lens ---------- */
+.seg { position: relative; isolation: isolate; }
+.seg-lens { position: absolute; top: 0; left: 0; z-index: 0; border-radius: 999px; background: #fff; box-shadow: 0 6px 18px -8px rgba(2,20,22,.4); pointer-events: none; transition: transform .55s cubic-bezier(.22,1,.36,1), width .55s cubic-bezier(.22,1,.36,1); }
+.seg button { position: relative; z-index: 1; transition: color .3s ease; }
+.seg button[aria-selected="true"] { background: transparent; box-shadow: none; color: var(--ink); }
+.seg button:hover { color: var(--ink); }
+.type-panel .checks li { transition: opacity .4s ease, transform .4s ease; }
+@media (prefers-reduced-motion: no-preference) {
+  .checks li { animation: rise .45s cubic-bezier(.2,.7,.2,1) both; }
+  .checks li:nth-child(2) { animation-delay: .07s; } .checks li:nth-child(3) { animation-delay: .14s; }
+}
+@media (prefers-reduced-motion: reduce) { .seg-lens { transition: none; } }
+/* phones: one scrolling row with soft edges so it reads as "more to the side" */
+@media (max-width: 520px) {
+  .seg { -webkit-mask-image: linear-gradient(90deg, transparent, #000 18px, #000 calc(100% - 18px), transparent); mask-image: linear-gradient(90deg, transparent, #000 18px, #000 calc(100% - 18px), transparent); }
+}
