@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://notyousha.github.io/ceevora-pos-site/sitemap.xml

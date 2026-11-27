@@ -26,8 +26,28 @@ function swapImg(el, k) {
 }
 
 const reduceMotion = matchMedia("(prefers-reduced-motion: reduce)").matches;
+// Language: ?lang=ar in the link wins (for Arabic ads), then the visitor's saved choice, then their phone's language.
+const params = new URLSearchParams(location.search);
 let lang = "en";
-try { if (localStorage.getItem("lang") === "ar") lang = "ar"; } catch {}
+{
+  let saved = null;
+  try { saved = localStorage.getItem("lang"); } catch {}
+  const q = params.get("lang");
+  if (q === "ar" || q === "en") lang = q;
+  else if (saved === "ar" || saved === "en") lang = saved;
+  else if ((navigator.languages || [navigator.language]).some((l) => /^ar(-|_|$)/i.test(l || ""))) lang = "ar";
+}
+// Remember which ad or campaign brought the visitor, for the demo request email.
+const UTM = (() => {
+  const keys = ["utm_source", "utm_medium", "utm_campaign", "utm_content", "utm_term", "gclid", "fbclid", "ttclid"];
+  let got = Object.fromEntries(keys.filter((k) => params.get(k)).map((k) => [k, params.get(k).slice(0, 120)]));
+  try {
+    if (Object.keys(got).length) sessionStorage.setItem("utm", JSON.stringify(got));
+    else got = JSON.parse(sessionStorage.getItem("utm") || "{}");
+  } catch {}
+  if (!Object.keys(got).length && document.referrer && !document.referrer.startsWith(location.origin)) got = { referrer: document.referrer.slice(0, 200) };
+  return got;
+})();
 const t = (k) => STR[lang][k] ?? STR.en[k] ?? "";
 
 // Build repeated content once; text is filled by render().
@@ -105,6 +125,7 @@ function render() {
 $("#langBtn").onclick = () => {
   lang = lang === "ar" ? "en" : "ar";
   try { localStorage.setItem("lang", lang); } catch {}
+  const u = new URL(location.href); u.searchParams.set("lang", lang); history.replaceState(null, "", u);
   // Cross-fade the whole page between languages where the browser supports it.
   if (document.startViewTransition && !reduceMotion) document.startViewTransition(render); else render();
 };
@@ -172,6 +193,8 @@ const COUNTRIES = {
   EG: C("Egypt", "مصر", "+20", "100 123 4567", [["Cairo","القاهرة"],["Giza","الجيزة"],["Alexandria","الإسكندرية"]]),
   CA: C("Canada", "كندا", "+1", "416 555 0123", [["Toronto","تورونتو"],["Montreal","مونتريال"],["Vancouver","فانكوفر"],["Calgary","كالغاري"],["Edmonton","إدمونتون"],["Ottawa","أوتاوا"],["Mississauga","ميسيساغا"],["Winnipeg","وينيبيغ"],["Hamilton","هاميلتون"],["London","لندن"],["Halifax","هاليفاكس"],["Quebec City","مدينة كيبك"],["St. John's","سانت جونز"]]),
 };
+// National number length (digits after the country code, leading 0 dropped).
+const PHONE_LEN = { SA: [9], AE: [9], QA: [8], KW: [8], BH: [8], OM: [8], JO: [9], EG: [10], CA: [10] };
 const form = $("#demoForm");
 const OTHER = "__other";
 
@@ -209,6 +232,7 @@ function emailBody() {
     Phone: `${v("dial")} ${v("phone")}`, Country: c.en, City: city,
     Locations: v("locations"), "POS terminals": v("terminals"),
     Requirements: v("notes") || "-", "Site language": lang === "ar" ? "Arabic" : "English",
+    "Came from": Object.entries(UTM).map(([k, v]) => `${k}=${v}`).join(", ") || "direct",
   };
 }
 
@@ -218,6 +242,12 @@ form.onsubmit = async (e) => {
   if (bad) {
     $("#formErr").textContent = `${t("required")}: ${bad.closest("label").querySelector("span").textContent}`;
     bad.focus();
+    return;
+  }
+  const digits = form.phone.value.replace(/[^0-9]/g, "").replace(/^0+/, "");
+  if (!(PHONE_LEN[form.country.value] || [7, 8, 9, 10, 11, 12]).includes(digits.length)) {
+    $("#formErr").textContent = `${t("field_phone")}: ${t("phoneHint").replace("50 123 4567", COUNTRIES[form.country.value].eg)}`;
+    form.phone.focus();
     return;
   }
   $("#formErr").textContent = "";
@@ -343,6 +373,8 @@ function renderQuote() {
   $("#qtype").innerHTML = ["cafe", "bakery", "restaurant", "retail"].map((k) => `<option value="${k}">${t("type_" + k)}</option>`).join("");
   $("#qtype").value = cur;
   qf.querySelectorAll("[data-t]").forEach((el) => { el.textContent = t(el.dataset.t); });
+  qf.querySelectorAll("[data-step]").forEach((b) =>
+    b.setAttribute("aria-label", `${b.dataset.step > 0 ? "+" : "−"} ${t(b.dataset.for === "qshops" ? "q_shops" : "q_terms")}`));
   const q = quoteState();
   $("#qlines").innerHTML = [
     t("type_" + q.type),
