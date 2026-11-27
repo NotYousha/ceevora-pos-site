@@ -19,6 +19,8 @@
 <link rel="alternate" hreflang="en" href="https://notyousha.github.io/ceevora-pos-site/?lang=en">
 <link rel="alternate" hreflang="ar" href="https://notyousha.github.io/ceevora-pos-site/?lang=ar">
 <link rel="alternate" hreflang="x-default" href="https://notyousha.github.io/ceevora-pos-site/">
+<script>(function(){try{var d=document.documentElement,t=localStorage.getItem("theme"),m=localStorage.getItem("motion");if(t==="light"||t==="dark")d.dataset.theme=t;if(m==="reduce")d.dataset.motion="reduce"}catch(e){}})()</script>
+<meta name="color-scheme" content="light dark">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&display=swap">
@@ -33,7 +35,7 @@
 <a class="skip" href="#main" data-t="skip">Skip to content</a>
 
 <header class="nav lg lg-bar" id="top">
-  <a href="#top" class="brand" aria-label="Ceevora POS home"><img src="assets/mark.webp" alt="Ceevora" width="130" height="43"></a>
+  <a href="#top" class="brand" aria-label="Ceevora POS home"><img class="logo-l" src="assets/mark.webp" alt="Ceevora" width="130" height="43"><img class="logo-d" src="assets/mark-dark.webp" alt="" width="130" height="43"></a>
   <nav class="nav-links" aria-label="Main">
     <a href="#workspace" data-t="product">Product</a>
     <a href="#types" data-t="nav_types">Who it's for</a>
@@ -44,9 +46,18 @@
   <div class="nav-end">
     <button class="lang lg-chip" id="langBtn" type="button" lang="ar"><img id="langFlag" src="assets/flags/sa.webp" alt="" width="27" height="18" decoding="async"><span id="langLabel">العربية</span></button>
     <a class="btn btn-solid nav-cta" href="#contact" data-t="nav_contact">Book a demo</a>
+    <button class="gear" id="gearBtn" type="button" aria-expanded="false" aria-controls="settings" data-t-label="settings" aria-label="Settings"><svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" d="M12 15.2a3.2 3.2 0 1 0 0-6.4 3.2 3.2 0 0 0 0 6.4z"/><path fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" d="M19.4 13.5c.1-.5.1-1 .1-1.5s0-1-.1-1.5l2-1.6-2-3.4-2.4 1a7.6 7.6 0 0 0-2.6-1.5L14 2.5h-4l-.4 2.5A7.6 7.6 0 0 0 7 6.5l-2.4-1-2 3.4 2 1.6c-.1.5-.1 1-.1 1.5s0 1 .1 1.5l-2 1.6 2 3.4 2.4-1c.8.7 1.6 1.2 2.6 1.5l.4 2.5h4l.4-2.5c1-.3 1.8-.8 2.6-1.5l2.4 1 2-3.4z"/></svg></button>
     <button class="burger" id="burger" type="button" aria-expanded="false" aria-controls="mnav" data-t-label="openNavigation" aria-label="Open navigation"><span></span><span></span></button>
   </div>
 </header>
+<div class="settings lg" id="settings" hidden role="dialog" aria-modal="false" data-t-label="settings" aria-label="Settings">
+  <div class="set-row"><span class="set-label" data-t="appearance">Appearance</span>
+    <div class="choice" role="radiogroup" data-pref="theme"><button type="button" role="radio" data-v="system" data-t="th_system">System</button><button type="button" role="radio" data-v="light" data-t="th_light">Light</button><button type="button" role="radio" data-v="dark" data-t="th_dark">Dark</button></div></div>
+  <div class="set-row"><span class="set-label" data-t="motion">Motion</span>
+    <div class="choice" role="radiogroup" data-pref="motion"><button type="button" role="radio" data-v="system" data-t="mo_system">System</button><button type="button" role="radio" data-v="reduce" data-t="mo_reduce">Reduced</button></div></div>
+  <div class="set-row"><span class="set-label" data-t="language">Language</span>
+    <div class="choice" role="radiogroup" data-pref="lang"><button type="button" role="radio" data-v="en" lang="en">English</button><button type="button" role="radio" data-v="ar" lang="ar">العربية</button></div></div>
+</div>
 <nav class="mnav lg" id="mnav" aria-label="Mobile" hidden>
   <a href="#workspace" data-t="product">Product</a>
   <a href="#types" data-t="nav_types">Who it's for</a>
@@ -114,7 +125,7 @@
     </div>
     <div data-r class="type-panel" role="tabpanel">
       <ul class="checks" id="typeList"></ul>
-      <img id="typeImg" decoding="async" sizes="(max-width: 860px) 100vw, 700px" src="assets/cevora-terminal.webp" alt="" width="1672" height="817" loading="lazy">
+      <img id="typeImg" decoding="async" sizes="(max-width: 860px) 100vw, 700px" src="assets/cevora-terminal.webp" alt="" width="1672" height="817">
     </div>
   </div>
 </section>
@@ -271,7 +282,7 @@
 
 <footer class="foot">
   <div class="wrap foot-grid">
-    <div><img src="assets/mark.webp" alt="Ceevora" width="120" height="40" loading="lazy"><p data-t="footerTagline">Point of sale and store operations for Saudi Arabia</p></div>
+    <div><img class="logo-l" src="assets/mark.webp" alt="Ceevora" width="120" height="40" loading="lazy"><img class="logo-d" src="assets/mark-dark.webp" alt="" width="120" height="40" loading="lazy"><p data-t="footerTagline">Point of sale and store operations for Saudi Arabia</p></div>
     <div><h4 data-t="product">Product</h4><a href="#workspace" data-t="workspace">Workspace</a><a href="#modules" data-t="modules">Modules</a></div>
     <div><h4 data-t="help">Help</h4><a href="#faq" data-t="faq">FAQ</a></div>
     <div><h4 data-t="contactHeading">Contact</h4><a href="#contact" data-t="contact">Contact us</a><a href="mailto:info@ceevora.com">info@ceevora.com</a></div>

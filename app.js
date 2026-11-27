@@ -25,7 +25,7 @@ function swapImg(el, k) {
   el.srcset = srcset(k); el.src = img(k);
 }
 
-const reduceMotion = matchMedia("(prefers-reduced-motion: reduce)").matches;
+const reduceMotion = matchMedia("(prefers-reduced-motion: reduce)").matches || document.documentElement.dataset.motion === "reduce";
 // Language: ?lang=ar in the link wins (for Arabic ads), then the visitor's saved choice, then their phone's language.
 const params = new URLSearchParams(location.search);
 let lang = "en";
@@ -115,6 +115,7 @@ function render() {
   fl.width = ca ? 32 : 27; fl.height = ca ? 16 : 18;
   $("#langLabel").textContent = STR[other].lang_full;
   fillCountries();
+  window.__syncSettings?.();
   renderQuote();
   renderCustomers();
   setLinks();
@@ -122,13 +123,15 @@ function render() {
   showType(type);
 }
 
-$("#langBtn").onclick = () => {
-  lang = lang === "ar" ? "en" : "ar";
+$("#langBtn").onclick = () => setLang(lang === "ar" ? "en" : "ar");
+function setLang(next) {
+  if (next === lang) return;
+  lang = next;
   try { localStorage.setItem("lang", lang); } catch {}
   const u = new URL(location.href); u.searchParams.set("lang", lang); history.replaceState(null, "", u);
   // Cross-fade the whole page between languages where the browser supports it.
   if (document.startViewTransition && !reduceMotion) document.startViewTransition(render); else render();
-};
+}
 $("#galTabs").onclick = (e) => { const b = e.target.closest("button"); if (b) showGal(+b.dataset.i); };
 $("#galPrev").onclick = () => showGal(gal + (lang === "ar" ? 1 : -1));
 $("#galNext").onclick = () => showGal(gal + (lang === "ar" ? -1 : 1));
@@ -452,6 +455,48 @@ if (CFG.gaId) {
   if (choice === "yes") loadGA(); else if (choice !== "no") $("#cookie").hidden = false;
   $("#ckYes").onclick = () => decide(true);
   $("#ckNo").onclick = () => decide(false);
+}
+
+// ---------- Settings: appearance, motion, language (saved on this device) ----------
+{
+  const root = document.documentElement, btn = $("#gearBtn"), panel = $("#settings");
+  const get = (k, d) => { try { return localStorage.getItem(k) || d; } catch { return d; } };
+  const put = (k, v) => { try { v === "system" ? localStorage.removeItem(k) : localStorage.setItem(k, v); } catch {} };
+  const current = { theme: () => get("theme", "system"), motion: () => get("motion", "system"), lang: () => lang };
+  const sync = () => panel.querySelectorAll(".choice").forEach((c) => {
+    const opts = [...c.querySelectorAll("button")], v = current[c.dataset.pref]();
+    const i = Math.max(0, opts.findIndex((b) => b.dataset.v === v));
+    opts.forEach((b, j) => b.setAttribute("aria-checked", j === i));
+    c.style.setProperty("--i", i); c.style.setProperty("--n", opts.length);
+  });
+  const apply = {
+    theme: (v) => { put("theme", v); v === "system" ? delete root.dataset.theme : (root.dataset.theme = v); },
+    motion: (v) => { put("motion", v); v === "reduce" ? (root.dataset.motion = "reduce") : delete root.dataset.motion; if (v === "reduce") stopTour(); },
+    lang: (v) => setLang(v),
+  };
+  panel.addEventListener("click", (e) => {
+    const b = e.target.closest(".choice button"); if (!b) return;
+    apply[b.closest(".choice").dataset.pref](b.dataset.v); sync();
+  });
+  // arrow keys inside a segmented control, like a native radio group
+  panel.addEventListener("keydown", (e) => {
+    const b = e.target.closest(".choice button"); const step = { ArrowRight: 1, ArrowLeft: -1 }[e.key];
+    if (!b || !step) return;
+    const opts = [...b.parentElement.children], n = opts[(opts.indexOf(b) + step * (lang === "ar" ? -1 : 1) + opts.length) % opts.length];
+    n.focus(); n.click(); e.preventDefault();
+  });
+  let open = false, timer = 0;
+  const setOpen = (o) => {
+    if (o === open) return; open = o; clearTimeout(timer);
+    btn.setAttribute("aria-expanded", o);
+    if (o) { sync(); panel.hidden = false; void panel.offsetHeight; panel.classList.add("open"); }
+    else { panel.classList.remove("open"); timer = setTimeout(() => { panel.hidden = true; }, reduceMotion ? 0 : 300); }
+  };
+  btn.onclick = (e) => { e.stopPropagation(); setOpen(!open); };
+  document.addEventListener("click", (e) => { if (open && !panel.contains(e.target)) setOpen(false); });
+  addEventListener("keydown", (e) => { if (e.key === "Escape" && open) { setOpen(false); btn.focus(); } });
+  addEventListener("scroll", () => open && setOpen(false), { passive: true });
+  window.__syncSettings = sync;
 }
 
 render();
