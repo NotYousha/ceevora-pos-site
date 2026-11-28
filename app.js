@@ -101,6 +101,10 @@ function render() {
   document.documentElement.lang = lang;
   document.documentElement.dir = lang === "ar" ? "rtl" : "ltr";
   document.title = t("siteTitle");
+  // Keep search/share tags in step with the language, so ?lang=ar is indexed as its own Arabic page.
+  document.querySelector('meta[name="description"]').content = t("metaDesc");
+  document.querySelector('meta[property="og:locale"]').content = lang === "ar" ? "ar_SA" : "en_US";
+  document.querySelector('link[rel="canonical"]').href = location.origin + location.pathname + (params.get("lang") === "ar" ? "?lang=ar" : "");
   document.querySelectorAll("[data-t]").forEach((el) => { el.textContent = t(el.dataset.t); });
   document.querySelectorAll("[data-t-label]").forEach((el) => el.setAttribute("aria-label", t(el.dataset.tLabel)));
   document.querySelectorAll("[data-t-ph]").forEach((el) => { el.placeholder = t(el.dataset.tPh); });

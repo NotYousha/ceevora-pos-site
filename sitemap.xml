@@ -1,7 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
-  <url><loc>https://notyousha.github.io/ceevora-pos-site/</loc><lastmod>2026-11-27</lastmod>
-    <xhtml:link rel="alternate" hreflang="en" href="https://notyousha.github.io/ceevora-pos-site/?lang=en"/>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
+  <url><loc>https://notyousha.github.io/ceevora-pos-site/</loc><lastmod>2026-11-28</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://notyousha.github.io/ceevora-pos-site/"/>
     <xhtml:link rel="alternate" hreflang="ar" href="https://notyousha.github.io/ceevora-pos-site/?lang=ar"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://notyousha.github.io/ceevora-pos-site/"/>
+    <image:image><image:loc>https://notyousha.github.io/ceevora-pos-site/assets/cevora-terminal.webp</image:loc></image:image>
+    <image:image><image:loc>https://notyousha.github.io/ceevora-pos-site/assets/cevora-dashboard.webp</image:loc></image:image>
+    <image:image><image:loc>https://notyousha.github.io/ceevora-pos-site/assets/cevora-products.webp</image:loc></image:image>
+    <image:image><image:loc>https://notyousha.github.io/ceevora-pos-site/assets/cevora-stock.webp</image:loc></image:image>
+    <image:image><image:loc>https://notyousha.github.io/ceevora-pos-site/assets/cevora-promotions.webp</image:loc></image:image>
+    <image:image><image:loc>https://notyousha.github.io/ceevora-pos-site/assets/cevora-transaction_history.webp</image:loc></image:image>
   </url>
 </urlset>
